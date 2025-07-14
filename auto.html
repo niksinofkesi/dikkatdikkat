@@ -24,7 +24,13 @@
   <h3 id="user-info" class="hidden">Giriş yapıldı: <span id="user-email"></span></h3>
   <button onclick="logout()" class="hidden" id="logout-button">Çıkış Yap</button>
 
-  <!-- Firebase SDK (modül gerekmez) -->
+  <!-- 🔐 Sadece admin'e özel gösterilecek -->
+  <div id="admin-panel" class="hidden">
+    <h3>Yönetici Paneli</h3>
+    <button onclick="alert('Makale ekleme sayfası gelecek')">Makale Ekle</button>
+  </div>
+
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
@@ -37,6 +43,8 @@
       messagingSenderId: "699804017421",
       appId: "1:699804017421:web:1b55f39f875389134fc644"
     };
+
+    const ADMIN_EMAIL = "dikkatdikkat10@gmail.com"; // 👉 burayı kendi e-postanla değiştir!
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
@@ -53,10 +61,18 @@
       const email = document.getElementById("login-email").value;
       const password = document.getElementById("login-password").value;
       auth.signInWithEmailAndPassword(email, password)
-        .then(user => {
+        .then(userCredential => {
+          const user = userCredential.user;
           document.getElementById("user-info").classList.remove("hidden");
           document.getElementById("logout-button").classList.remove("hidden");
-          document.getElementById("user-email").textContent = email;
+          document.getElementById("user-email").textContent = user.email;
+
+          // 👉 Admin kontrolü burada!
+          if (user.email === ADMIN_EMAIL) {
+            document.getElementById("admin-panel").classList.remove("hidden");
+          } else {
+            document.getElementById("admin-panel").classList.add("hidden");
+          }
         })
         .catch(error => alert(error.message));
     }
@@ -65,9 +81,11 @@
       auth.signOut().then(() => {
         document.getElementById("user-info").classList.add("hidden");
         document.getElementById("logout-button").classList.add("hidden");
+        document.getElementById("admin-panel").classList.add("hidden");
         alert("Çıkış yapıldı");
       });
     }
   </script>
 </body>
 </html>
+
