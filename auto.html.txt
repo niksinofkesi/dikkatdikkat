@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Giriş & Kayıt</title>
+  <style>
+    body { font-family: Arial; max-width: 400px; margin: 50px auto; }
+    input { display: block; width: 100%; padding: 10px; margin: 10px 0; }
+    button { padding: 10px; width: 100%; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <h2>Üye Ol</h2>
+  <input type="email" id="signup-email" placeholder="E-posta">
+  <input type="password" id="signup-password" placeholder="Şifre">
+  <button onclick="signUp()">Kayıt Ol</button>
+
+  <h2>Giriş Yap</h2>
+  <input type="email" id="login-email" placeholder="E-posta">
+  <input type="password" id="login-password" placeholder="Şifre">
+  <button onclick="login()">Giriş Yap</button>
+
+  <h3 id="user-info" class="hidden">Giriş yapıldı: <span id="user-email"></span></h3>
+  <button onclick="logout()" class="hidden" id="logout-button">Çıkış Yap</button>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+  <script>
+    // 🔐 Firebase Config - <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
+    authDomain: "dikkatdikkatblogu.firebaseapp.com",
+    projectId: "dikkatdikkatblogu",
+    storageBucket: "dikkatdikkatblogu.firebasestorage.app",
+    messagingSenderId: "699804017421",
+    appId: "1:699804017421:web:1b55f39f875389134fc644"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
+    const firebaseConfig = {
+      apiKey: "API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "PROJECT_ID",
+      storageBucket: "PROJECT_ID.appspot.com",
+      messagingSenderId: "XXXXX",
+      appId: "XXXXXX"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Kayıt Ol
+    function signUp() {
+      const email = document.getElementById("signup-email").value;
+      const password = document.getElementById("signup-password").value;
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(user => alert("Kayıt başarılı"))
+        .catch(error => alert(error.message));
+    }
+
+    // Giriş Yap
+    function login() {
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value;
+      auth.signInWithEmailAndPassword(email, password)
+        .then(user => {
+          document.getElementById("user-info").classList.remove("hidden");
+          document.getElementById("logout-button").classList.remove("hidden");
+          document.getElementById("user-email").textContent = email;
+        })
+        .catch(error => alert(error.message));
+    }
+
+    // Çıkış Yap
+    function logout() {
+      auth.signOut().then(() => {
+        document.getElementById("user-info").classList.add("hidden");
+        document.getElementById("logout-button").classList.add("hidden");
+        alert("Çıkış yapıldı");
+      });
+    }
+  </script>
+</body>
+</html>
