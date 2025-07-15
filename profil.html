@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Profil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg-light: #ffffff;
+      --bg-dark: #121212;
+      --text-light: #000000;
+      --text-dark: #e0e0e0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .section {
+      margin-top: 30px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 6px;
+      background-color: #333;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #444;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      cursor: pointer;
+      font-size: 14px;
+      background-color: transparent;
+      color: inherit;
+      border: 1px solid;
+      padding: 6px 12px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="topbar">
+      <h2>Profil Sayfası</h2>
+      <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+    </div>
+
+    <p>Hoş geldin, <strong id="username"></strong>!</p>
+
+    <!-- Admin'e özel -->
+    <div id="admin-section" class="section hidden">
+      <h3>Yönetici Paneli</h3>
+      <a href="admin.html"><button>Makale Ekle</button></a>
+      <a href="duzenle.html"><button>Makale Düzenle</button></a>
+      <a href="yorumlar.html"><button>Yorumları Görüntüle / Sil</button></a>
+    </div>
+
+    <!-- Kullanıcıya özel -->
+    <div id="user-section" class="section hidden">
+      <h3>Kullanıcı Paneli</h3>
+      <a href="gecmis.html"><button>Geçmiş Yazılarım</button></a>
+      <a href="kutuphane.html"><button>Kütüphanem</button></a>
+      <a href="yorumlarim.html"><button>Yorumlarım</button></a>
+    </div>
+
+    <div class="section">
+      <button onclick="logout()">Çıkış Yap</button>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
+      authDomain: "dikkatdikkatblogu.firebaseapp.com",
+      projectId: "dikkatdikkatblogu",
+      storageBucket: "dikkatdikkatblogu.appspot.com",
+      messagingSenderId: "699804017421",
+      appId: "1:699804017421:web:1b55f39f875389134fc644"
+    };
+
+    const ADMIN_EMAIL = "dikkatdikkat10@gmail.com";
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // Tema geçişi
+    function toggleTheme() {
+      const current = document.body.style.backgroundColor;
+      const isDark = current === "rgb(18, 18, 18)" || !current;
+
+      if (isDark) {
+        document.body.style.backgroundColor = "#ffffff";
+        document.body.style.color = "#000000";
+      } else {
+        document.body.style.backgroundColor = "#121212";
+        document.body.style.color = "#e0e0e0";
+      }
+    }
+
+    // Oturum kontrolü
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        db.collection("users").doc(user.uid).get().then((doc) => {
+          if (doc.exists) {
+            const username = doc.data().kullaniciAdi;
+            document.getElementById("username").textContent = username;
+
+            if (user.email === ADMIN_EMAIL) {
+              document.getElementById("admin-section").classList.remove("hidden");
+            } else {
+              document.getElementById("user-section").classList.remove("hidden");
+            }
+          }
+        });
+      } else {
+        window.location.href = "auto.html"; // Giriş yoksa yönlendir
+      }
+    });
+
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = "auto.html";
+      });
+    }
+  </script>
+</body>
+</html>
