@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>D!KKAT D!KKAT | Ana Sayfa</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -11,69 +11,87 @@
       padding: 0;
       box-sizing: border-box;
     }
+
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #121212;
       color: #f0f0f0;
       transition: background 0.3s, color 0.3s;
     }
+
     body.light {
       background-color: #ffffff;
       color: #121212;
     }
+
     header {
       background-color: #1f1f1f;
       padding: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
       border-bottom: 1px solid #333;
     }
+
     .logo {
       font-size: 24px;
       font-weight: 600;
       color: #d62828;
       text-decoration: none;
     }
-    nav a {
-      margin-left: 20px;
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .nav-right a {
       color: #ccc;
       text-decoration: none;
       font-weight: 500;
     }
-    nav a:hover {
+
+    .nav-right a:hover {
       color: white;
     }
+
     .theme-toggle {
-      position: absolute;
-      top: 22px;
-      right: 20px;
       background: none;
       border: 1px solid #ccc;
       color: inherit;
       padding: 6px 10px;
       border-radius: 5px;
       cursor: pointer;
+      font-size: 14px;
     }
+
+    .theme-toggle:hover {
+      border-color: white;
+    }
+
     .hero {
       background-color: #1e1e1e;
-      height: auto;
       padding: 40px 20px;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
     }
+
     .hero h1 {
-      font-size: 22px;
+      font-size: 20px;
       color: #eeeeee;
       max-width: 700px;
     }
+
     .container {
       max-width: 900px;
       margin: 40px auto;
       padding: 0 20px;
     }
+
     .makale-card {
       background-color: #1e1e1e;
       border-radius: 10px;
@@ -83,22 +101,27 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.3);
       transition: 0.3s;
     }
+
     .makale-card:hover {
       transform: scale(1.01);
     }
+
     .makale-card h2 {
       color: #ff4d4d;
       margin-bottom: 10px;
     }
+
     .makale-card p {
       color: #ddd;
     }
+
     .makale-card a {
       display: inline-block;
       margin-top: 10px;
       color: #d62828;
       text-decoration: underline;
     }
+
     footer {
       text-align: center;
       padding: 30px;
@@ -106,21 +129,63 @@
       font-size: 14px;
       color: #888;
     }
+
+    /* Light tema stilleri */
+    body.light header {
+      background-color: #f9f9f9;
+      border-bottom: 1px solid #ccc;
+    }
+
+    body.light .makale-card {
+      background-color: #f3f3f3;
+      color: #121212;
+    }
+
+    body.light .makale-card p {
+      color: #333;
+    }
+
+    body.light footer {
+      border-top: 1px solid #ccc;
+      color: #555;
+    }
+
+    body.light .nav-right a {
+      color: #333;
+    }
+
+    body.light .theme-toggle {
+      border-color: #999;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-right {
+        margin-top: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+    }
   </style>
 </head>
 <body>
-  <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
   <header>
     <a class="logo" href="index.html">D!KKAT D!KKAT</a>
-    <nav>
+    <div class="nav-right">
+      <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
       <a href="hakkimizda.html">Hakkımızda</a>
       <a href="iletisim.html">İletişim</a>
       <a href="auto.html">Giriş / Üye Ol</a>
-    </nav>
+    </div>
   </header>
 
   <div class="hero">
-    <h1>“İnanıyoruz ki gelişim, yalnızca değişen dünyayı anlamakla değil, kendimizi de daha derinlemesine tanımakla mümkün dür.”</h1>
+    <h1>“İnanıyoruz ki gelişim, yalnızca değişen dünyayı anlamakla değil, kendimizi de daha derinlemesine tanımakla mümkündür.”</h1>
   </div>
 
   <div class="container" id="makale-liste">
