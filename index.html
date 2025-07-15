@@ -2,276 +2,169 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Dikkat Dikkat Blogu</title>
-
-  <!-- Google Fonts: Poppins -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D!KKAT D!KKAT | Ana Sayfa</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
-      background-color: #121212;
       font-family: 'Poppins', sans-serif;
+      background-color: #121212;
       color: #f0f0f0;
-      text-align: center;
-      padding: 40px;
       transition: background 0.3s, color 0.3s;
     }
-
     body.light {
-      background-color: #f4f4f4;
-      color: #111;
+      background-color: #ffffff;
+      color: #121212;
     }
-
+    header {
+      background-color: #1f1f1f;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #333;
+    }
     .logo {
-      width: 200px;
-      margin-bottom: 30px;
-      filter: brightness(1.2);
-    }
-
-    .giris-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background-color: #d62828;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      font-size: 24px;
+      font-weight: 600;
+      color: #d62828;
       text-decoration: none;
     }
-
-    .tema-btn {
+    nav a {
+      margin-left: 20px;
+      color: #ccc;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    nav a:hover {
+      color: white;
+    }
+    .theme-toggle {
       position: absolute;
-      top: 20px;
-      left: 20px;
+      top: 22px;
+      right: 20px;
       background: none;
-      border: none;
-      font-size: 22px;
+      border: 1px solid #ccc;
+      color: inherit;
+      padding: 6px 10px;
+      border-radius: 5px;
       cursor: pointer;
-      color: #f0f0f0;
     }
-
-    body.light .tema-btn,
-    body.light .giris-btn {
-      color: #111;
-    }
-
-    article {
+    .hero {
       background-color: #1e1e1e;
-      border-left: 5px solid #d62828;
-      border-radius: 8px;
+      height: auto;
+      padding: 40px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 22px;
+      color: #eeeeee;
+      max-width: 700px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .makale-card {
+      background-color: #1e1e1e;
+      border-radius: 10px;
       padding: 20px;
-      margin: 30px auto;
-      max-width: 600px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-      text-align: left;
-      transition: all 0.3s ease;
+      margin-bottom: 30px;
+      border-left: 5px solid #d62828;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: 0.3s;
     }
-
-    body.light article {
-      background-color: #ffffff;
-      color: #111;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    article:hover {
+    .makale-card:hover {
       transform: scale(1.01);
     }
-
-    h2 {
+    .makale-card h2 {
       color: #ff4d4d;
-      margin-top: 0;
+      margin-bottom: 10px;
     }
-
-    p {
-      font-size: 18px;
+    .makale-card p {
       color: #ddd;
-      line-height: 1.6;
     }
-
-    body.light p {
-      color: #333;
-    }
-
-    .yorumlar {
-      margin-top: 20px;
-      padding-top: 10px;
-      border-top: 1px solid #444;
-    }
-
-    body.light .yorumlar {
-      border-top: 1px solid #ccc;
-    }
-
-    .yorumlar textarea {
-      width: 100%;
-      padding: 8px;
-      background-color: #222;
-      border: 1px solid #444;
-      color: white;
-      border-radius: 4px;
+    .makale-card a {
+      display: inline-block;
       margin-top: 10px;
+      color: #d62828;
+      text-decoration: underline;
     }
-
-    body.light .yorumlar textarea {
-      background-color: #eee;
-      color: #111;
-    }
-
-    .yorumlar button {
-      margin-top: 5px;
-      background-color: #333;
-      color: #fff;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .yorumlar button:hover {
-      background-color: #555;
-    }
-
-    .yorumlar p {
+    footer {
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid #333;
       font-size: 14px;
-      color: #ccc;
-      margin: 5px 0;
-    }
-
-    body.light .yorumlar p {
-      color: #555;
+      color: #888;
     }
   </style>
 </head>
 <body>
+  <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+  <header>
+    <a class="logo" href="index.html">D!KKAT D!KKAT</a>
+    <nav>
+      <a href="hakkimizda.html">Hakkımızda</a>
+      <a href="iletisim.html">İletişim</a>
+      <a href="auto.html">Giriş / Üye Ol</a>
+    </nav>
+  </header>
 
-  <!-- TEMA ve GİRİŞ BUTONLARI -->
-  <button id="temaBtn" class="tema-btn" title="Tema Değiştir">🌙</button>
-  <a href="auto.html" class="giris-btn">Giriş / Üye Ol</a>
+  <div class="hero">
+    <h1>“İnanıyoruz ki gelişim, yalnızca değişen dünyayı anlamakla değil, kendimizi de daha derinlemesine tanımakla mümkün dür.”</h1>
+  </div>
 
-  <!-- LOGO -->
-  <img src="images/dikkat-logo.png" alt="Dikkat Logo" class="logo">
+  <div class="container" id="makale-liste">
+    <!-- Firebase'den makaleler gelecek -->
+  </div>
 
-  <!-- D!KKAT D!KKAT - Yeni Yazı -->
-  <article style="background: linear-gradient(135deg, #1e1e1e, #2c2c2c); color: #f9f4ef;">
-    <h2 style="color: #ff4d4d;">📢 D!KKAT D!KKAT</h2>
-    <p style="font-size: 18px;">
-      İnanıyoruz ki gelişim, yalnızca değişen dünyayı anlamakla değil, kendimizi de daha derinlemesine tanımakla mümkündür.
-    </p>
-  </article>
+  <footer>
+    &copy; 2025 D!KKAT D!KKAT. Tüm hakları saklıdır.
+  </footer>
 
-  <!-- Hakkımızda -->
-  <article>
-    <h2>📌 Hakkımızda</h2>
-    <p>Güncel olayların analizinden kişisel gelişime, kültürel üretimden görünmeyen meselelere kadar geniş bir yelpazede düşünce üretmeyi amaçlayan, kar amacı gütmeyen bir sivil girişimdir.</p>
-  </article>
-
-  <!-- Firebase'den gelen makaleler -->
-  <div id="makale-liste"></div>
-
-  <!-- Firebase SDK -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
       authDomain: "dikkatdikkatblogu.firebaseapp.com",
       projectId: "dikkatdikkatblogu",
-      storageBucket: "dikkatdikkatblogu.firebasestorage.app",
+      storageBucket: "dikkatdikkatblogu.appspot.com",
       messagingSenderId: "699804017421",
       appId: "1:699804017421:web:1b55f39f875389134fc644"
     };
-
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Makaleleri listele
     db.collection("makaleler").orderBy("createdAt", "desc").get().then(snapshot => {
       const container = document.getElementById("makale-liste");
       snapshot.forEach(doc => {
-        const makale = doc.data();
+        const m = doc.data();
         const id = doc.id;
-        const article = document.createElement("article");
-        article.innerHTML = `
-          <h2>${makale.baslik}</h2>
-          <p>${makale.icerik}</p>
-          ${makale.gorsel ? `<img src="${makale.gorsel}" style="max-width:100%; border-radius:6px;">` : ""}
-          <div class="yorumlar">
-            <h4>Yorumlar</h4>
-            <div class="yorum-listesi" id="yorum-${id}"></div>
-            <textarea placeholder="Yorum yaz..." id="yorumInput-${id}"></textarea>
-            <button onclick="yorumEkle('${id}')">Gönder</button>
-          </div>
+        const div = document.createElement("div");
+        div.className = "makale-card";
+        div.innerHTML = `
+          <h2>${m.baslik}</h2>
+          <p>${m.icerik.slice(0, 200)}...</p>
+          <a href="makale.html?id=${id}">Devamını oku</a>
         `;
-        container.appendChild(article);
-        yorumlariGetir(id);
+        container.appendChild(div);
       });
     });
 
-    // Yorum ekle
-    function yorumEkle(makaleId) {
-      const textarea = document.getElementById(`yorumInput-${makaleId}`);
-      const yorum = textarea.value.trim();
-      if (!yorum) return;
-
-      auth.onAuthStateChanged(user => {
-        if (user) {
-          db.collection("yorumlar").add({
-            makaleId,
-            kullanici: user.email,
-            yorum,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          }).then(() => {
-            textarea.value = "";
-            yorumlariGetir(makaleId);
-          });
-        } else {
-          alert("Yorum yapabilmek için giriş yapmalısınız.");
-        }
-      });
+    function toggleTheme() {
+      document.body.classList.toggle("light");
     }
-
-    // Yorumları getir
-    function yorumlariGetir(makaleId) {
-      const yorumDiv = document.getElementById(`yorum-${makaleId}`);
-      yorumDiv.innerHTML = "";
-
-      db.collection("yorumlar")
-        .where("makaleId", "==", makaleId)
-        .orderBy("createdAt", "asc")
-        .get()
-        .then(snapshot => {
-          snapshot.forEach(doc => {
-            const y = doc.data();
-            yorumDiv.innerHTML += `<p><strong>${y.kullanici}:</strong> ${y.yorum}</p>`;
-          });
-        });
-    }
-
-    // Tema geçiş
-    const temaBtn = document.getElementById("temaBtn");
-    const body = document.body;
-    const aktifTema = localStorage.getItem("tema");
-
-    if (aktifTema === "light") {
-      body.classList.add("light");
-      temaBtn.textContent = "☀️";
-    }
-
-    temaBtn.addEventListener("click", () => {
-      body.classList.toggle("light");
-      if (body.classList.contains("light")) {
-        localStorage.setItem("tema", "light");
-        temaBtn.textContent = "☀️";
-      } else {
-        localStorage.setItem("tema", "dark");
-        temaBtn.textContent = "🌙";
-      }
-    });
   </script>
 </body>
 </html>
