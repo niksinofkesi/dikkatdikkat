@@ -2,82 +2,90 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Giriş & Kayıt</title>
   <style>
-    :root {
-      --bg-color: #ffffff;
-      --text-color: #000000;
-      --input-bg: #f0f0f0;
-      --input-border: #ccc;
-      --button-bg: #333;
-      --button-text: #fff;
-    }
-
-    body.dark {
-      --bg-color: #121212;
-      --text-color: #e0e0e0;
-      --input-bg: #1e1e1e;
-      --input-border: #333;
-      --button-bg: #444;
-      --button-text: #fff;
-    }
-
     body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
       font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
       max-width: 400px;
       margin: 50px auto;
-      padding: 0 20px;
-      transition: all 0.3s ease;
+      padding: 20px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .light-theme {
+      background-color: #f5f5f5;
+      color: #333;
     }
 
     input, button {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
-      background-color: var(--input-bg);
-      border: 1px solid var(--input-border);
-      color: var(--text-color);
+      border: 1px solid #333;
       border-radius: 4px;
-      box-sizing: border-box;
+    }
+
+    input {
+      background-color: #1e1e1e;
+      color: #fff;
+    }
+
+    .light-theme input {
+      background-color: #fff;
+      color: #000;
     }
 
     button {
-      background-color: var(--button-bg);
-      color: var(--button-text);
+      background-color: #333;
+      color: #fff;
       cursor: pointer;
     }
 
+    .light-theme button {
+      background-color: #ddd;
+      color: #000;
+    }
+
     button:hover {
-      opacity: 0.9;
+      background-color: #444;
+    }
+
+    .light-theme button:hover {
+      background-color: #bbb;
     }
 
     .hidden {
       display: none;
     }
 
-    #admin-panel {
-      margin-top: 20px;
+    h2, h3 {
+      color: inherit;
     }
 
-    #theme-toggle {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: none;
-      border: 1px solid var(--text-color);
-      color: var(--text-color);
-      padding: 5px 10px;
-      border-radius: 4px;
+    .switch-theme {
+      margin-bottom: 20px;
+      text-align: right;
+    }
+
+    .forgot-link {
+      color: #4ea3ff;
+      font-size: 0.9em;
+      text-align: right;
+      display: block;
       cursor: pointer;
+    }
+
+    .light-theme .forgot-link {
+      color: #0066cc;
     }
   </style>
 </head>
 <body>
-
-  <button id="theme-toggle" onclick="toggleTheme()">🌙/☀️</button>
+  <div class="switch-theme">
+    <button onclick="toggleTheme()">🌗 Tema Değiştir</button>
+  </div>
 
   <h2>Üye Ol</h2>
   <input type="text" id="signup-username" placeholder="Kullanıcı Adı">
@@ -88,6 +96,7 @@
   <h2>Giriş Yap</h2>
   <input type="email" id="login-email" placeholder="E-posta">
   <input type="password" id="login-password" placeholder="Şifre">
+  <span class="forgot-link" onclick="resetPassword()">Şifremi Unuttum</span>
   <button onclick="login()">Giriş Yap</button>
 
   <div id="user-info" class="hidden">
@@ -106,6 +115,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <script>
+    // Firebase Yapılandırma
     const firebaseConfig = {
       apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
       authDomain: "dikkatdikkatblogu.firebaseapp.com",
@@ -120,6 +130,10 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
+
+    function toggleTheme() {
+      document.body.classList.toggle("light-theme");
+    }
 
     function signUp() {
       const username = document.getElementById("signup-username").value.trim();
@@ -138,11 +152,10 @@
             kullaniciAdi: username,
             email: email,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          }).then(() => user);
+          });
         })
-        .then((user) => {
-          alert("Kayıt başarılı! Ana sayfaya yönlendiriliyorsunuz...");
-          window.location.href = "index.html";
+        .then(() => {
+          alert("Kayıt başarılı! Artık giriş yapabilirsiniz.");
         })
         .catch((error) => {
           console.error("Kayıt hatası:", error);
@@ -169,6 +182,9 @@
                 } else {
                   document.getElementById("admin-panel").classList.add("hidden");
                 }
+
+                // ✅ Başarılı giriş sonrası yönlendirme
+                window.location.href = "index.html";
               } else {
                 alert("Kullanıcı adı verisi bulunamadı.");
               }
@@ -177,11 +193,25 @@
         .catch((error) => {
           console.error("Giriş hatası:", error);
           if (error.code === 'auth/quota-exceeded') {
-            alert("Çok fazla giriş denemesi yapıldı. Lütfen 1 saat sonra tekrar deneyin.");
+            alert("Çok fazla giriş denemesi yapıldı. Lütfen sonra tekrar deneyin.");
           } else {
             alert(error.message);
           }
         });
+    }
+
+    function resetPassword() {
+      const email = prompt("Lütfen şifre sıfırlama bağlantısı göndermek için e-posta adresinizi girin:");
+      if (email) {
+        auth.sendPasswordResetEmail(email)
+          .then(() => {
+            alert("Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.");
+          })
+          .catch((error) => {
+            console.error("Şifre sıfırlama hatası:", error);
+            alert(error.message);
+          });
+      }
     }
 
     function logout() {
@@ -191,21 +221,9 @@
         alert("Çıkış yapıldı");
       });
     }
-
-    // Tema geçişi
-    function toggleTheme() {
-      const current = document.body.classList.toggle("dark");
-      localStorage.setItem("theme", current ? "dark" : "light");
-    }
-
-    // Sayfa yüklendiğinde tema kontrolü
-    window.onload = function () {
-      if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark");
-      }
-    }
   </script>
 </body>
 </html>
+
 
 
