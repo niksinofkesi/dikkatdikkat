@@ -1,91 +1,69 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Giriş & Kayıt</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: #e0e0e0;
-      max-width: 400px;
-      margin: 50px auto;
-      padding: 20px;
-      transition: background-color 0.3s, color 0.3s;
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #000000;
+      --input-bg: #f0f0f0;
+      --button-bg: #333;
+      --button-hover: #444;
+    }
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --text-color: #e0e0e0;
+      --input-bg: #1e1e1e;
+      --button-bg: #444;
+      --button-hover: #666;
     }
 
-    .light-theme {
-      background-color: #f5f5f5;
-      color: #333;
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 50px auto;
     }
 
     input, button {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
-      border: 1px solid #333;
+      background-color: var(--input-bg);
+      border: 1px solid #ccc;
+      color: var(--text-color);
       border-radius: 4px;
     }
 
-    input {
-      background-color: #1e1e1e;
-      color: #fff;
-    }
-
-    .light-theme input {
-      background-color: #fff;
-      color: #000;
-    }
-
     button {
-      background-color: #333;
-      color: #fff;
+      background-color: var(--button-bg);
       cursor: pointer;
-    }
-
-    .light-theme button {
-      background-color: #ddd;
-      color: #000;
     }
 
     button:hover {
-      background-color: #444;
+      background-color: var(--button-hover);
     }
 
-    .light-theme button:hover {
-      background-color: #bbb;
-    }
+    .hidden { display: none; }
+    h2, h3 { color: var(--text-color); }
 
-    .hidden {
-      display: none;
+    .theme-toggle {
+      margin-top: 20px;
+      text-align: center;
     }
-
-    h2, h3 {
-      color: inherit;
-    }
-
-    .switch-theme {
-      margin-bottom: 20px;
-      text-align: right;
-    }
-
-    .forgot-link {
-      color: #4ea3ff;
-      font-size: 0.9em;
-      text-align: right;
-      display: block;
+    a {
+      color: var(--text-color);
+      text-decoration: underline;
       cursor: pointer;
-    }
-
-    .light-theme .forgot-link {
-      color: #0066cc;
+      display: block;
+      text-align: center;
+      margin-top: 10px;
     }
   </style>
 </head>
-<body>
-  <div class="switch-theme">
-    <button onclick="toggleTheme()">🌗 Tema Değiştir</button>
-  </div>
+<body data-theme="light">
 
   <h2>Üye Ol</h2>
   <input type="text" id="signup-username" placeholder="Kullanıcı Adı">
@@ -96,17 +74,11 @@
   <h2>Giriş Yap</h2>
   <input type="email" id="login-email" placeholder="E-posta">
   <input type="password" id="login-password" placeholder="Şifre">
-  <span class="forgot-link" onclick="resetPassword()">Şifremi Unuttum</span>
   <button onclick="login()">Giriş Yap</button>
+  <a onclick="resetPassword()">Şifremi Unuttum</a>
 
-  <div id="user-info" class="hidden">
-    <h3>Giriş yapıldı. Hoş geldin, <span id="kullanici-adi"></span>!</h3>
-    <button onclick="logout()">Çıkış Yap</button>
-  </div>
-
-  <div id="admin-panel" class="hidden">
-    <h3>Yönetici Paneli</h3>
-    <a href="admin.html"><button>Makale Ekle</button></a>
+  <div class="theme-toggle">
+    <button onclick="toggleTheme()">🌗 Tema Değiştir</button>
   </div>
 
   <!-- Firebase SDK -->
@@ -115,12 +87,11 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <script>
-    // Firebase Yapılandırma
     const firebaseConfig = {
       apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
       authDomain: "dikkatdikkatblogu.firebaseapp.com",
       projectId: "dikkatdikkatblogu",
-      storageBucket: "dikkatdikkatblogu.firebasestorage.app",
+      storageBucket: "dikkatdikkatblogu.appspot.com",
       messagingSenderId: "699804017421",
       appId: "1:699804017421:web:1b55f39f875389134fc644"
     };
@@ -130,10 +101,6 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
-
-    function toggleTheme() {
-      document.body.classList.toggle("light-theme");
-    }
 
     function signUp() {
       const username = document.getElementById("signup-username").value.trim();
@@ -155,10 +122,9 @@
           });
         })
         .then(() => {
-          alert("Kayıt başarılı! Artık giriş yapabilirsiniz.");
+          alert("Kayıt başarılı! Giriş yapabilirsiniz.");
         })
         .catch((error) => {
-          console.error("Kayıt hatası:", error);
           alert(error.message);
         });
     }
@@ -173,55 +139,38 @@
           return db.collection("users").doc(user.uid).get()
             .then((doc) => {
               if (doc.exists) {
-                const username = doc.data().kullaniciAdi;
-                document.getElementById("kullanici-adi").textContent = username;
-                document.getElementById("user-info").classList.remove("hidden");
-
-                if (user.email === ADMIN_EMAIL) {
-                  document.getElementById("admin-panel").classList.remove("hidden");
-                } else {
-                  document.getElementById("admin-panel").classList.add("hidden");
-                }
-
-                // ✅ Başarılı giriş sonrası yönlendirme
-                window.location.href = "index.html";
+                // Giriş başarılıysa yönlendirme:
+                window.location.href = "profil.html";
               } else {
                 alert("Kullanıcı adı verisi bulunamadı.");
               }
             });
         })
         .catch((error) => {
-          console.error("Giriş hatası:", error);
-          if (error.code === 'auth/quota-exceeded') {
-            alert("Çok fazla giriş denemesi yapıldı. Lütfen sonra tekrar deneyin.");
-          } else {
-            alert(error.message);
-          }
+          alert(error.message);
         });
     }
 
     function resetPassword() {
-      const email = prompt("Lütfen şifre sıfırlama bağlantısı göndermek için e-posta adresinizi girin:");
+      const email = prompt("Lütfen şifre sıfırlama için e-posta adresinizi girin:");
       if (email) {
         auth.sendPasswordResetEmail(email)
           .then(() => {
-            alert("Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.");
+            alert("Şifre sıfırlama bağlantısı gönderildi.");
           })
           .catch((error) => {
-            console.error("Şifre sıfırlama hatası:", error);
-            alert(error.message);
+            alert("Hata: " + error.message);
           });
       }
     }
 
-    function logout() {
-      auth.signOut().then(() => {
-        document.getElementById("user-info").classList.add("hidden");
-        document.getElementById("admin-panel").classList.add("hidden");
-        alert("Çıkış yapıldı");
-      });
+    function toggleTheme() {
+      const body = document.body;
+      const current = body.getAttribute("data-theme");
+      body.setAttribute("data-theme", current === "dark" ? "light" : "dark");
     }
   </script>
+
 </body>
 </html>
 
