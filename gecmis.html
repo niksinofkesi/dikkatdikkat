@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>D!KKAT D!KKAT | Geçmiş</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.light {
+      background-color: #ffffff;
+      color: #121212;
+    }
+
+    header {
+      background-color: #1f1f1f;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #333;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 600;
+      color: #d62828;
+      text-decoration: none;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .nav-right a {
+      color: #ccc;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-right a:hover {
+      color: white;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid #ccc;
+      color: inherit;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .theme-toggle:hover {
+      border-color: white;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .makale-card {
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-left: 5px solid #ff9900;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: 0.3s;
+    }
+
+    .makale-card:hover {
+      transform: scale(1.01);
+    }
+
+    .makale-card h2 {
+      color: #ffaa00;
+      margin-bottom: 10px;
+    }
+
+    .makale-card p {
+      color: #ddd;
+    }
+
+    .makale-card a {
+      display: inline-block;
+      margin-top: 10px;
+      color: #ffaa00;
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid #333;
+      font-size: 14px;
+      color: #888;
+    }
+
+    body.light header {
+      background-color: #f9f9f9;
+      border-bottom: 1px solid #ccc;
+    }
+
+    body.light .makale-card {
+      background-color: #f3f3f3;
+      color: #121212;
+    }
+
+    body.light .makale-card p {
+      color: #333;
+    }
+
+    body.light footer {
+      border-top: 1px solid #ccc;
+      color: #555;
+    }
+
+    body.light .nav-right a {
+      color: #333;
+    }
+
+    body.light .theme-toggle {
+      border-color: #999;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-right {
+        margin-top: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="logo" href="index.html">D!KKAT D!KKAT</a>
+    <div class="nav-right">
+      <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+      <a href="profil.html">Profil</a>
+      <a href="kutuphane.html">Kütüphane</a>
+      <a href="auto.html" id="loginLink">Giriş Yap</a>
+    </div>
+  </header>
+
+  <div class="container" id="gecmis-liste">
+    <h2>Geçmiş</h2>
+    <p>Daha önce görüntülediğiniz makaleler burada listelenir.</p>
+    <!-- Geçmiş içerikler burada görünecek -->
+  </div>
+
+  <footer>
+    &copy; 2025 D!KKAT D!KKAT. Tüm hakları saklıdır.
+  </footer>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
+      authDomain: "dikkatdikkatblogu.firebaseapp.com",
+      projectId: "dikkatdikkatblogu",
+      storageBucket: "dikkatdikkatblogu.appspot.com",
+      messagingSenderId: "699804017421",
+      appId: "1:699804017421:web:1b55f39f875389134fc644"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    auth.onAuthStateChanged(user => {
+      const loginLink = document.getElementById("loginLink");
+      if (user) {
+        loginLink.textContent = "Çıkış Yap";
+        loginLink.href = "#";
+        loginLink.onclick = () => {
+          auth.signOut().then(() => {
+            window.location.href = "index.html";
+          });
+        };
+
+        const container = document.getElementById("gecmis-liste");
+
+        db.collection("gecmis")
+          .where("uid", "==", user.uid)
+          .orderBy("tarih", "desc")
+          .get()
+          .then(snapshot => {
+            if (snapshot.empty) {
+              container.innerHTML += "<p>Henüz hiç makale görüntülemediniz.</p>";
+              return;
+            }
+
+            snapshot.forEach(doc => {
+              const data = doc.data();
+              const div = document.createElement("div");
+              div.className = "makale-card";
+              div.innerHTML = `
+                <h2>${data.baslik}</h2>
+                <p>${data.icerik.slice(0, 200)}...</p>
+                <a href="makale.html?id=${data.makaleId}">Tekrar oku</a>
+              `;
+              container.appendChild(div);
+            });
+          })
+          .catch(err => {
+            console.error("Geçmiş verisi alınamadı:", err);
+            container.innerHTML += "<p>Bir hata oluştu.</p>";
+          });
+
+      } else {
+        window.location.href = "auto.html";
+      }
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+    }
+  </script>
+</body>
+</html>
