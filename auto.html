@@ -2,36 +2,82 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Giriş & Kayıt</title>
   <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #000000;
+      --input-bg: #f0f0f0;
+      --input-border: #ccc;
+      --button-bg: #333;
+      --button-text: #fff;
+    }
+
+    body.dark {
+      --bg-color: #121212;
+      --text-color: #e0e0e0;
+      --input-bg: #1e1e1e;
+      --input-border: #333;
+      --button-bg: #444;
+      --button-text: #fff;
+    }
+
     body {
-      background-color: #121212;
-      color: #e0e0e0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       font-family: Arial, sans-serif;
       max-width: 400px;
       margin: 50px auto;
+      padding: 0 20px;
+      transition: all 0.3s ease;
     }
+
     input, button {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
-      background-color: #1e1e1e;
-      border: 1px solid #333;
-      color: #fff;
+      background-color: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: var(--text-color);
       border-radius: 4px;
+      box-sizing: border-box;
     }
+
     button {
-      background-color: #333;
+      background-color: var(--button-bg);
+      color: var(--button-text);
       cursor: pointer;
     }
+
     button:hover {
-      background-color: #444;
+      opacity: 0.9;
     }
-    .hidden { display: none; }
-    h2, h3 { color: #fff; }
+
+    .hidden {
+      display: none;
+    }
+
+    #admin-panel {
+      margin-top: 20px;
+    }
+
+    #theme-toggle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: 1px solid var(--text-color);
+      color: var(--text-color);
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+
+  <button id="theme-toggle" onclick="toggleTheme()">🌙/☀️</button>
 
   <h2>Üye Ol</h2>
   <input type="text" id="signup-username" placeholder="Kullanıcı Adı">
@@ -69,7 +115,7 @@
       appId: "1:699804017421:web:1b55f39f875389134fc644"
     };
 
-    const ADMIN_EMAIL = "dikkatdikkat10@gmail.com"; // ← burayı kendi mail adresinle değiştir
+    const ADMIN_EMAIL = "dikkatdikkat10@gmail.com";
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
@@ -92,10 +138,11 @@
             kullaniciAdi: username,
             email: email,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
+          }).then(() => user);
         })
-        .then(() => {
-          alert("Kayıt başarılı! Artık giriş yapabilirsiniz.");
+        .then((user) => {
+          alert("Kayıt başarılı! Ana sayfaya yönlendiriliyorsunuz...");
+          window.location.href = "index.html";
         })
         .catch((error) => {
           console.error("Kayıt hatası:", error);
@@ -110,7 +157,6 @@
       auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-
           return db.collection("users").doc(user.uid).get()
             .then((doc) => {
               if (doc.exists) {
@@ -144,6 +190,19 @@
         document.getElementById("admin-panel").classList.add("hidden");
         alert("Çıkış yapıldı");
       });
+    }
+
+    // Tema geçişi
+    function toggleTheme() {
+      const current = document.body.classList.toggle("dark");
+      localStorage.setItem("theme", current ? "dark" : "light");
+    }
+
+    // Sayfa yüklendiğinde tema kontrolü
+    window.onload = function () {
+      if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark");
+      }
     }
   </script>
 </body>
