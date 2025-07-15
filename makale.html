@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>D!KKAT D!KKAT | Makale</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.light {
+      background-color: #ffffff;
+      color: #121212;
+    }
+
+    header {
+      background-color: #1f1f1f;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #333;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 600;
+      color: #d62828;
+      text-decoration: none;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .nav-right a {
+      color: #ccc;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-right a:hover {
+      color: white;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid #ccc;
+      color: inherit;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .theme-toggle:hover {
+      border-color: white;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    h1 {
+      color: #ff4d4d;
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+
+    .buttons {
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      margin-right: 10px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #d62828;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .buttons button:hover {
+      background-color: #ff4d4d;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid #333;
+      font-size: 14px;
+      color: #888;
+    }
+
+    body.light header {
+      background-color: #f9f9f9;
+      border-bottom: 1px solid #ccc;
+    }
+
+    body.light footer {
+      border-top: 1px solid #ccc;
+      color: #555;
+    }
+
+    body.light .nav-right a {
+      color: #333;
+    }
+
+    body.light .theme-toggle {
+      border-color: #999;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-right {
+        margin-top: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="logo" href="index.html">D!KKAT D!KKAT</a>
+    <div class="nav-right">
+      <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+      <a href="profil.html">Profil</a>
+      <a href="auto.html" id="auth-link">Giriş / Üye Ol</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1 id="makale-baslik">Yükleniyor...</h1>
+    <p id="makale-icerik">...</p>
+
+    <div class="buttons" id="user-buttons" style="display:none;">
+      <button onclick="kutuphaneyeEkle()">Kütüphaneye Ekle</button>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 D!KKAT D!KKAT. Tüm hakları saklıdır.
+  </footer>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
+      authDomain: "dikkatdikkatblogu.firebaseapp.com",
+      projectId: "dikkatdikkatblogu",
+      storageBucket: "dikkatdikkatblogu.appspot.com",
+      messagingSenderId: "699804017421",
+      appId: "1:699804017421:web:1b55f39f875389134fc644"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    const makaleId = new URLSearchParams(window.location.search).get("id");
+
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+    }
+
+    function kutuphaneyeEkle() {
+      const user = auth.currentUser;
+      if (!user) return alert("Lütfen giriş yapın.");
+
+      db.collection("makaleler").doc(makaleId).get().then(doc => {
+        const veri = doc.data();
+        db.collection("users").doc(user.uid).collection("kutuphane").doc(makaleId).set({
+          baslik: veri.baslik,
+          icerik: veri.icerik,
+          tarih: new Date()
+        }).then(() => {
+          alert("Makale kütüphaneye eklendi.");
+        });
+      });
+    }
+
+    function gecmiseKaydet(veri) {
+      const user = auth.currentUser;
+      if (!user) return;
+      db.collection("users").doc(user.uid).collection("gecmis").add({
+        makaleId,
+        baslik: veri.baslik,
+        okumaTarihi: new Date()
+      });
+    }
+
+    // Makale içeriğini yükle
+    db.collection("makaleler").doc(makaleId).get().then(doc => {
+      if (doc.exists) {
+        const veri = doc.data();
+        document.getElementById("makale-baslik").innerText = veri.baslik;
+        document.getElementById("makale-icerik").innerText = veri.icerik;
+
+        auth.onAuthStateChanged(user => {
+          if (user) {
+            document.getElementById("user-buttons").style.display = "block";
+            document.getElementById("auth-link").textContent = "Çıkış Yap";
+            document.getElementById("auth-link").addEventListener("click", () => {
+              auth.signOut().then(() => location.href = "index.html");
+            });
+            gecmiseKaydet(veri);
+          }
+        });
+      } else {
+        document.getElementById("makale-baslik").innerText = "Makale bulunamadı.";
+        document.getElementById("makale-icerik").innerText = "";
+      }
+    });
+  </script>
+</body>
+</html>
