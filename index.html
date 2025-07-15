@@ -3,47 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <title>Dikkat Dikkat Blogu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Google Fonts: Poppins -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --bg: #121212;
+      --text: #f0f0f0;
+      --card: #1e1e1e;
+      --accent: #d62828;
+      --border: #444;
+    }
+
+    body.light {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f4f4f4;
+      --accent: #d62828;
+      --border: #ccc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      background-color: #121212;
+      background-color: var(--bg);
+      color: var(--text);
       font-family: 'Poppins', sans-serif;
-      color: #f0f0f0;
-      text-align: center;
-      padding: 40px;
+      padding: 40px 20px;
+      transition: all 0.3s ease;
     }
 
     .logo {
       width: 200px;
-      margin-bottom: 30px;
+      margin: 0 auto 30px;
+      display: block;
       filter: brightness(1.2);
     }
 
-    .giris-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background-color: #d62828;
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    .giris-btn, .tema-btn {
+      background-color: var(--accent);
       color: white;
-      padding: 10px 20px;
+      padding: 10px 18px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       text-decoration: none;
+      font-size: 14px;
+    }
+
+    .tema-btn {
+      background-color: transparent;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      margin-left: 10px;
     }
 
     article {
-      background-color: #1e1e1e;
-      border-left: 5px solid #d62828;
+      background-color: var(--card);
+      border-left: 5px solid var(--accent);
       border-radius: 8px;
       padding: 20px;
       margin: 30px auto;
-      max-width: 600px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-      text-align: left;
+      max-width: 700px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
       transition: all 0.3s ease;
     }
 
@@ -51,36 +87,35 @@
       transform: scale(1.01);
     }
 
-    h2 {
-      color: #ff4d4d;
-      margin-top: 0;
+    article h2 {
+      color: var(--accent);
     }
 
-    p {
+    article p {
       font-size: 18px;
-      color: #ddd;
+      color: var(--text);
       line-height: 1.6;
     }
 
     .yorumlar {
       margin-top: 20px;
       padding-top: 10px;
-      border-top: 1px solid #444;
+      border-top: 1px solid var(--border);
     }
 
     .yorumlar textarea {
       width: 100%;
       padding: 8px;
-      background-color: #222;
-      border: 1px solid #444;
-      color: white;
+      background-color: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
       border-radius: 4px;
       margin-top: 10px;
     }
 
     .yorumlar button {
       margin-top: 5px;
-      background-color: #333;
+      background-color: var(--accent);
       color: #fff;
       border: none;
       padding: 8px 12px;
@@ -88,23 +123,34 @@
       cursor: pointer;
     }
 
-    .yorumlar button:hover {
-      background-color: #555;
-    }
-
     .yorumlar p {
       font-size: 14px;
-      color: #ccc;
       margin: 5px 0;
+      color: var(--text);
+    }
+
+    @media (max-width: 600px) {
+      .topbar {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .logo {
+        width: 150px;
+      }
+
+      article {
+        padding: 15px;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="topbar">
+    <a href="auto.html" class="giris-btn">Giriş / Üye Ol</a>
+    <button class="tema-btn" onclick="temaDegistir()">🌗 Tema</button>
+  </div>
 
-  <!-- GİRİŞ BUTONU -->
-  <a href="auto.html" class="giris-btn">Giriş / Üye Ol</a>
-
-  <!-- LOGO -->
   <img src="images/dikkat-logo.png" alt="Dikkat Logo" class="logo">
 
   <!-- Sabit Yazılar -->
@@ -115,15 +161,14 @@
 
   <article>
     <h2>📌 Hakkımızda</h2>
-    <p>Güncel olayların analizinden kişisel gelişime, kültürel üretimden görünmeyen meselelere kadar geniş bir yelpazede düşünce üretmeyi amaçlayan, kar amacı gütmeyen bir sivil girişimdir.Amacımız; gündemde olan konuların arka planına inmekle kalmayıp, gündem dışında kalan, konuşulmayan ya da ötelenen meselelere de ışık tutmaktır. Toplumsal olaylar kadar bireysel farkındalığın da önemine inanıyor; kişisel gelişim, düşünsel derinlik ve eleştirel bakış açısını teşvik eden içerikler üretiyoruz.
+    <p>Güncel olayların analizinden kişisel gelişime, kültürel üretimden görünmeyen meselelere kadar geniş bir yelpazede düşünce üretmeyi amaçlayan, kar amacı gütmeyen bir sivil girişimdir. Amacımız; gündemde olan konuların arka planına inmekle kalmayıp, gündem dışında kalan, konuşulmayan ya da ötelenen meselelere de ışık tutmaktır. Toplumsal olaylar kadar bireysel farkındalığın da önemine inanıyor; kişisel gelişim, düşünsel derinlik ve eleştirel bakış açısını teşvik eden içerikler üretiyoruz.
 
 Kitap ve film eleştirileri, çağdaş kültür analizleri, söyleşiler ve çeşitli medya içerikleriyle hem bireyin hem de toplumun düşünsel zenginliğini artırmayı hedefliyoruz. Farklı alanlardan gelen bakış açılarına alan açarak, eleştirel diyaloğun güçlenmesini önemsiyoruz.
 
-Dikkat Dikkat, sadece gündemi takip etmez; gündemin ötesine geçerek, insanı ve toplumu çok yönlü bir bakışla anlamaya çalışır. Çünkü inanıyoruz ki gelişim, yalnızca değişen dünyayı anlamakla değil, kendimizi de daha derinlemesine tanımakla mümkündür.
-    .</p>
+Biz,  sadece gündemi takip etmeyeceğiz; gündemin ötesine geçerek, insanı ve toplumu çok yönlü bir bakışla anlamaya çalışacağız. Çünkü inanıyoruz ki gelişim, yalnızca değişen dünyayı anlamakla değil, kendimizi de daha derinlemesine tanımakla mümkündür </p>
   </article>
 
-  <!-- Firebase'den gelen makaleler burada -->
+  <!-- Firebase'den gelen makaleler -->
   <div id="makale-liste"></div>
 
   <!-- Firebase SDK -->
@@ -136,7 +181,7 @@ Dikkat Dikkat, sadece gündemi takip etmez; gündemin ötesine geçerek, insanı
       apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
       authDomain: "dikkatdikkatblogu.firebaseapp.com",
       projectId: "dikkatdikkatblogu",
-      storageBucket: "dikkatdikkatblogu.firebasestorage.app",
+      storageBucket: "dikkatdikkatblogu.appspot.com",
       messagingSenderId: "699804017421",
       appId: "1:699804017421:web:1b55f39f875389134fc644"
     };
@@ -154,7 +199,7 @@ Dikkat Dikkat, sadece gündemi takip etmez; gündemin ötesine geçerek, insanı
         article.innerHTML = `
           <h2>${makale.baslik}</h2>
           <p>${makale.icerik}</p>
-          ${makale.gorsel ? `<img src="${makale.gorsel}" style="max-width:100%; border-radius:6px;">` : ""}
+          ${makale.gorsel ? `<img src="${makale.gorsel}" style="max-width:100%; border-radius:6px; margin-top:10px;">` : ""}
           <div class="yorumlar">
             <h4>Yorumlar</h4>
             <div class="yorum-listesi" id="yorum-${id}"></div>
@@ -204,7 +249,22 @@ Dikkat Dikkat, sadece gündemi takip etmez; gündemin ötesine geçerek, insanı
           });
         });
     }
+
+    // Tema geçişi
+    function temaDegistir() {
+      document.body.classList.toggle("light");
+      localStorage.setItem("tema", document.body.classList.contains("light") ? "light" : "dark");
+    }
+
+    // Tema durumu yükleniyor
+    window.addEventListener("DOMContentLoaded", () => {
+      const kayitliTema = localStorage.getItem("tema");
+      if (kayitliTema === "light") {
+        document.body.classList.add("light");
+      }
+    });
   </script>
 </body>
 </html>
+
 
