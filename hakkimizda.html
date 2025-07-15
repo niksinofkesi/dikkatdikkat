@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hakkımızda | D!KKAT D!KKAT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.light {
+      background-color: #ffffff;
+      color: #121212;
+    }
+    header {
+      background-color: #1f1f1f;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #333;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: 600;
+      color: #d62828;
+      text-decoration: none;
+    }
+    nav a {
+      margin-left: 20px;
+      color: #ccc;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    nav a:hover {
+      color: white;
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 22px;
+      right: 20px;
+      background: none;
+      border: 1px solid #ccc;
+      color: inherit;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #ff4d4d;
+    }
+    p {
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+    footer {
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid #333;
+      font-size: 14px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+
+  <header>
+    <a class="logo" href="index.html">D!KKAT D!KKAT</a>
+    <nav>
+      <a href="hakkimizda.html">Hakkımızda</a>
+      <a href="iletisim.html">İletişim</a>
+      <a href="auto.html">Giriş / Üye Ol</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>Hakkımızda</h1>
+    
+    <p>
+      D!KKAT D!KKAT; dünyayı, bireyi ve toplumu çok yönlü anlamaya çalışan, bağımsız ve özgür bir içerik platformudur.
+      Burada sadece haberleri değil; düşünceyi, duyguyu ve yeniliği barındıran yazılara yer veririz.
+    </p>
+    
+    <p>
+      Amacımız; görünmeyeni görünür kılmak, duyulmayanı duyurmak ve gelişimi birlikte inşa etmektir. 
+      İnanıyoruz ki gelişim, yalnızca değişen dünyayı anlamakla değil, kendimizi de daha derinlemesine tanımakla mümkündür.
+    </p>
+    
+    <p>
+      Bu platformda sizden gelen katkılar, yorumlar ve geri bildirimlerle büyüyoruz. D!KKAT D!KKAT; bir çağrı değil, bir birliktelik.
+    </p>
+    
+    <p>
+      Güncel olayların analizinden kişisel gelişime, kültürel üretimden görünmeyen meselelere kadar geniş bir yelpazede düşünce üretmeyi amaçlayan, kar amacı gütmeyen bir sivil girişimdir.
+    </p>
+    
+    <p>
+      Amacımız; gündemde olan konuların arka planına inmekle kalmayıp, gündem dışında kalan, konuşulmayan ya da ötelenen meselelere de ışık tutmaktır. Toplumsal olaylar kadar bireysel farkındalığın da önemine inanıyor; kişisel gelişim, düşünsel derinlik ve eleştirel bakış açısını teşvik eden içerikler üretiyoruz.
+    </p>
+    
+    <p>
+      Kitap ve film eleştirileri, çağdaş kültür analizleri, söyleşiler ve çeşitli medya içerikleriyle hem bireyin hem de toplumun düşünsel zenginliğini artırmayı hedefliyoruz. Farklı alanlardan gelen bakış açılarına alan açarak, eleştirel diyaloğun güçlenmesini önemsiyoruz.
+    </p>
+    
+    <p>
+      Biz, sadece gündemi takip etmeyeceğiz; gündemin ötesine geçerek, insanı ve toplumu çok yönlü bir bakışla anlamaya çalışacağız. Çünkü inanıyoruz ki gelişim, yalnızca değişen dünyayı anlamakla değil, kendimizi de daha derinlemesine tanımakla mümkündür.
+    </p>
+  </div>
+
+  <footer>
+    &copy; 2025 D!KKAT D!KKAT. Tüm hakları saklıdır.
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+    }
+  </script>
+</body>
+</html>
