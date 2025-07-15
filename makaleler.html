@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Makaleler</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg-light: #f0f0f0;
+      --text-light: #000;
+      --bg-dark: #121212;
+      --text-dark: #fff;
+    }
+
+    body.light {
+      background-color: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    button, select {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .article {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 8px;
+      background-color: #1e1e1e;
+      color: #fff;
+    }
+
+    .article.light {
+      background-color: #fff;
+      color: #000;
+    }
+
+    .admin-controls, .user-controls {
+      margin-top: 1rem;
+    }
+
+    textarea {
+      width: 100%;
+      height: 80px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .top-nav a {
+      margin-right: 1rem;
+    }
+  </style>
+</head>
+<body class="dark">
+  <header>
+    <div class="top-nav">
+      <a href="index.html">Anasayfa</a>
+      <a href="profil.html">Profil</a>
+    </div>
+    <div>
+      <button onclick="toggleTheme()">Tema Değiştir</button>
+      <button onclick="logout()">Çıkış Yap</button>
+    </div>
+  </header>
+
+  <main>
+    <h1>Makaleler</h1>
+    <div id="makalelerListesi"></div>
+  </main>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
+      authDomain: "dikkatdikkatblogu.firebaseapp.com",
+      projectId: "dikkatdikkatblogu",
+      storageBucket: "dikkatdikkatblogu.appspot.com",
+      messagingSenderId: "699804017421",
+      appId: "1:699804017421:web:1b55f39f875389134fc644"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const ADMIN_EMAIL = "dikkatdikkat10@gmail.com";
+
+    let currentUser = null;
+
+    function toggleTheme() {
+      const body = document.body;
+      body.classList.toggle("dark");
+      body.classList.toggle("light");
+
+      // Her makalenin temasını da güncelle
+      document.querySelectorAll(".article").forEach(el => {
+        el.classList.toggle("light");
+      });
+    }
+
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = "auto.html";
+      });
+    }
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        currentUser = user;
+        loadArticles(user);
+      } else {
+        window.location.href = "auto.html";
+      }
+    });
+
+    function loadArticles(user) {
+      db.collection("makaleler").orderBy("createdAt", "desc").get().then(snapshot => {
+        const container = document.getElementById("makalelerListesi");
+        container.innerHTML = "";
+
+        snapshot.forEach(doc => {
+          const makale = doc.data();
+          const id = doc.id;
+
+          const article = document.createElement("div");
+          article.className = "article";
+          if (!document.body.classList.contains("dark")) {
+            article.classList.add("light");
+          }
+
+          article.innerHTML = `
+            <h2>${makale.baslik}</h2>
+            <p>${makale.icerik}</p>
+            <small>Yazar: ${makale.yazarEmail || "Bilinmiyor"}</small>
+          `;
+
+          const controls = document.createElement("div");
+
+          if (user.email === ADMIN_EMAIL) {
+            controls.className = "admin-controls";
+            controls.innerHTML = `
+              <button onclick="duzenle('${id}')">Düzenle</button>
+              <button onclick="sil('${id}')">Sil</button>
+            `;
+          } else {
+            controls.className = "user-controls";
+            controls.innerHTML = `
+              <button onclick="kütüphaneyeEkle('${id}')">Kütüphaneye Ekle</button>
+              <textarea id="yorum-${id}" placeholder="Yorum yaz..."></textarea>
+              <button onclick="yorumYap('${id}')">Yorum Yap</button>
+            `;
+          }
+
+          article.appendChild(controls);
+          container.appendChild(article);
+        });
+      });
+    }
+
+    function duzenle(id) {
+      window.location.href = `duzenle.html?id=${id}`;
+    }
+
+    function sil(id) {
+      if (confirm("Bu makaleyi silmek istediğinizden emin misiniz?")) {
+        db.collection("makaleler").doc(id).delete().then(() => {
+          alert("Makale silindi.");
+          location.reload();
+        });
+      }
+    }
+
+    function yorumYap(id) {
+      const yorumIcerik = document.getElementById(`yorum-${id}`).value;
+      if (!yorumIcerik) return;
+
+      db.collection("makaleler").doc(id).collection("yorumlar").add({
+        yazar: currentUser.email,
+        icerik: yorumIcerik,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(() => {
+        alert("Yorum eklendi.");
+        document.getElementById(`yorum-${id}`).value = "";
+      });
+    }
+
+    function kütüphaneyeEkle(id) {
+      db.collection("users").doc(currentUser.uid).collection("kutuphane").doc(id).set({
+        kayitTarihi: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(() => {
+        alert("Makale kütüphaneye eklendi.");
+      });
+    }
+  </script>
+</body>
+</html>
