@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Makale Ekle</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 0 20px;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #1e1e1e;
+      border: 1px solid #333;
+      color: #fff;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #333;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #444;
+    }
+  </style>
+</head>
+<body>
+  <h2>Yeni Makale Ekle</h2>
+
+  <input type="text" id="baslik" placeholder="Makale Başlığı" />
+  <textarea id="icerik" rows="6" placeholder="Makale İçeriği"></textarea>
+  <input type="text" id="gorsel" placeholder="Görsel URL (zorunlu değil)" />
+  <button onclick="makaleEkle()">Kaydet</button>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
+      authDomain: "dikkatdikkatblogu.firebaseapp.com",
+      projectId: "dikkatdikkatblogu",
+      storageBucket: "dikkatdikkatblogu.firebasestorage.app",
+      messagingSenderId: "699804017421",
+      appId: "1:699804017421:web:1b55f39f875389134fc644"
+    };
+
+    const ADMIN_EMAIL = "seninmailin@gmail.com"; // ← burayı kendi e-posta adresinle değiştir
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    auth.onAuthStateChanged((user) => {
+      if (!user || user.email !== ADMIN_EMAIL) {
+        alert("Bu sayfaya sadece yönetici erişebilir.");
+        window.location.href = "index.html";
+      }
+    });
+
+    function makaleEkle() {
+      const baslik = document.getElementById("baslik").value.trim();
+      const icerik = document.getElementById("icerik").value.trim();
+      const gorsel = document.getElementById("gorsel").value.trim();
+
+      if (!baslik || !icerik) {
+        alert("Başlık ve içerik zorunludur.");
+        return;
+      }
+
+      db.collection("makaleler").add({
+        baslik: baslik,
+        icerik: icerik,
+        gorsel: gorsel || "",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+        alert("Makale başarıyla eklendi!");
+        document.getElementById("baslik").value = "";
+        document.getElementById("icerik").value = "";
+        document.getElementById("gorsel").value = "";
+      })
+      .catch((error) => {
+        alert("Hata: " + error.message);
+      });
+    }
+  </script>
+</body>
+</html>
