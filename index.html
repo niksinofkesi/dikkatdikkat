@@ -19,7 +19,20 @@
     .logo {
       width: 200px;
       margin-bottom: 30px;
-      filter: brightness(1.2); /* Koyu zeminde daha net görünür */
+      filter: brightness(1.2);
+    }
+
+    .giris-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: #d62828;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
     }
 
     article {
@@ -48,30 +61,146 @@
       color: #ddd;
       line-height: 1.6;
     }
+
+    .yorumlar {
+      margin-top: 20px;
+      padding-top: 10px;
+      border-top: 1px solid #444;
+    }
+
+    .yorumlar textarea {
+      width: 100%;
+      padding: 8px;
+      background-color: #222;
+      border: 1px solid #444;
+      color: white;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
+
+    .yorumlar button {
+      margin-top: 5px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .yorumlar button:hover {
+      background-color: #555;
+    }
+
+    .yorumlar p {
+      font-size: 14px;
+      color: #ccc;
+      margin: 5px 0;
+    }
   </style>
 </head>
 <body>
 
+  <!-- GİRİŞ BUTONU -->
+  <a href="auto.html" class="giris-btn">Giriş / Üye Ol</a>
+
   <!-- LOGO -->
   <img src="images/dikkat-logo.png" alt="Dikkat Logo" class="logo">
 
-  <!-- 1. Blog Yazısı -->
+  <!-- Sabit Yazılar -->
   <article>
     <h2>📢 D!kkat D!kkat</h2>
     <p>Bu bizim haber bültenimiz. Hoş geldiniz.</p>
   </article>
 
-  <!-- 2. Blog Yazısı -->
   <article>
     <h2>📌 Hakkımızda</h2>
     <p>Güncel olayların analizinden kişisel gelişime, kültürel üretimden görünmeyen meselelere kadar geniş bir yelpazede düşünce üretmeyi amaçlayan, kar amacı gütmeyen bir sivil girişimdir.
-
-Amacımız; gündemde olan konuların arka planına inmekle kalmayıp, gündem dışında kalan, konuşulmayan ya da ötelenen meselelere de ışık tutmaktır. Toplumsal olaylar kadar bireysel farkındalığın da önemine inanıyor; kişisel gelişim, düşünsel derinlik ve eleştirel bakış açısını teşvik eden içerikler üretiyoruz.
-
-Kitap ve film eleştirileri, çağdaş kültür analizleri, söyleşiler ve çeşitli medya içerikleriyle hem bireyin hem de toplumun düşünsel zenginliğini artırmayı hedefliyoruz. Farklı alanlardan gelen bakış açılarına alan açarak, eleştirel diyaloğun güçlenmesini önemsiyoruz.
-
-Biz, sadece gündemi takip etmeyeceğiz; gündemin ötesine geçerek, insanı ve toplumu çok yönlü bir bakışla anlamaya çalışacağız. Çünkü inanıyoruz ki gelişim, yalnızca değişen dünyayı anlamakla değil, kendimizi de daha derinlemesine tanımakla mümkündür.</p>
+    ...</p>
   </article>
 
+  <!-- Firebase'den gelen makaleler burada -->
+  <div id="makale-liste"></div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
+      authDomain: "dikkatdikkatblogu.firebaseapp.com",
+      projectId: "dikkatdikkatblogu",
+      storageBucket: "dikkatdikkatblogu.firebasestorage.app",
+      messagingSenderId: "699804017421",
+      appId: "1:699804017421:web:1b55f39f875389134fc644"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    db.collection("makaleler").orderBy("createdAt", "desc").get().then(snapshot => {
+      const container = document.getElementById("makale-liste");
+      snapshot.forEach(doc => {
+        const makale = doc.data();
+        const id = doc.id;
+        const article = document.createElement("article");
+        article.innerHTML = `
+          <h2>${makale.baslik}</h2>
+          <p>${makale.icerik}</p>
+          ${makale.gorsel ? `<img src="${makale.gorsel}" style="max-width:100%; border-radius:6px;">` : ""}
+          <div class="yorumlar">
+            <h4>Yorumlar</h4>
+            <div class="yorum-listesi" id="yorum-${id}"></div>
+            <textarea placeholder="Yorum yaz..." id="yorumInput-${id}"></textarea>
+            <button onclick="yorumEkle('${id}')">Gönder</button>
+          </div>
+        `;
+        container.appendChild(article);
+        yorumlariGetir(id);
+      });
+    });
+
+    function yorumEkle(makaleId) {
+      const textarea = document.getElementById(`yorumInput-${makaleId}`);
+      const yorum = textarea.value.trim();
+      if (!yorum) return;
+
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          db.collection("yorumlar").add({
+            makaleId,
+            kullanici: user.email,
+            yorum,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          }).then(() => {
+            textarea.value = "";
+            yorumlariGetir(makaleId);
+          });
+        } else {
+          alert("Yorum yapabilmek için giriş yapmalısınız.");
+        }
+      });
+    }
+
+    function yorumlariGetir(makaleId) {
+      const yorumDiv = document.getElementById(`yorum-${makaleId}`);
+      yorumDiv.innerHTML = "";
+
+      db.collection("yorumlar")
+        .where("makaleId", "==", makaleId)
+        .orderBy("createdAt", "asc")
+        .get()
+        .then(snapshot => {
+          snapshot.forEach(doc => {
+            const y = doc.data();
+            yorumDiv.innerHTML += `<p><strong>${y.kullanici}:</strong> ${y.yorum}</p>`;
+          });
+        });
+    }
+  </script>
 </body>
 </html>
+
