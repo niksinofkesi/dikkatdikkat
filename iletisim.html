@@ -174,6 +174,347 @@
     localStorage.setItem("theme", isLight ? "light" : "dark");
   }
 </script>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>D!KKAT D!KKAT | Hakkımızda</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.light {
+      background-color: #ffffff;
+      color: #121212;
+    }
+    header {
+      background-color: #1f1f1f;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #333;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: 600;
+      color: #d62828;
+      text-decoration: none;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+    }
+    nav a {
+      margin-left: 20px;
+      color: #ccc;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    nav a:hover {
+      color: white;
+    }
+    .theme-toggle {
+      background: none;
+      border: 1px solid #ccc;
+      color: inherit;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 20px;
+    }
+    .hero {
+      background-color: #1e1e1e;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 24px;
+      color: #eeeeee;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+      line-height: 1.7;
+    }
+    footer {
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid #333;
+      font-size: 14px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="logo" href="index.html">D!KKAT D!KKAT</a>
+    <nav>
+      <a href="index.html">Ana Sayfa</a>
+      <a href="iletisim.html">İletişim</a>
+      <a href="auto.html">Giriş / Üye Ol</a>
+      <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+    </nav>
+  </header>
 
+  <div class="hero">
+    <h1>Hakkımızda</h1>
+  </div>
+
+  <div class="container">
+    <p>Güncel olayların analizinden kişisel gelişime, kültürel üretimden görünmeyen meselelere kadar geniş bir yelpazede düşünce üretmeyi amaçlayan, kar amacı gütmeyen bir sivil girişimdir.</p>
+    <br />
+    <p>Amacımız; gündemde olan konuların arka planına inmekle kalmayıp, gündem dışında kalan, konuşulmayan ya da ötelenen meselelere de ışık tutmaktır. Toplumsal olaylar kadar bireysel farkındalığın da önemine inanıyor; kişisel gelişim, düşünsel derinlik ve eleştirel bakış açısını teşvik eden içerikler üretiyoruz.</p>
+    <br />
+    <p>Kitap ve film eleştirileri, çağdaş kültür analizleri, söyleşiler ve çeşitli medya içerikleriyle hem bireyin hem de toplumun düşünsel zenginliğini artırmayı hedefliyoruz. Farklı alanlardan gelen bakış açılarına alan açarak, eleştirel diyaloğun güçlenmesini önemsiyoruz.</p>
+    <br />
+    <p>Biz, sadece gündemi takip etmeyeceğiz; gündemin ötesine geçerek, insanı ve toplumu çok yönlü bir bakışla anlamaya çalışacağız. Çünkü inanıyoruz ki gelişim, yalnızca değişen dünyayı anlamakla değil, kendimizi de daha derinlemesine tanımakla mümkündür.</p>
+  </div>
+
+
+<script>
+  // Sayfa yüklendiğinde, localStorage'dan tema bilgisi al
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light") {
+      document.body.classList.add("light");
+    }
+  });
+
+  function toggleTheme() {
+    const isLight = document.body.classList.toggle("light");
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+  }
+<script type="module">
+  // Firebase modüllerini içe aktar
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+  // Firebase yapılandırman
+  const firebaseConfig = {
+    apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
+    authDomain: "dikkatdikkatblogu.firebaseapp.com",
+    projectId: "dikkatdikkatblogu",
+    storageBucket: "dikkatdikkatblogu.firebasestorage.app",
+    messagingSenderId: "699804017421",
+    appId: "1:699804017421:web:1b55f39f875389134fc644"
+  };
+
+  // Firebase başlat
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Oturum kontrolü
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("Giriş yapılmış:", user.email);
+      // Örneğin, kullanıcı adını veya çıkış butonunu burada gösterebilirsin
+    } else {
+      console.log("Giriş yapılmamış.");
+      // Gerekirse yönlendirme veya uyarı da ekleyebilirsin
+    }
+  });
+</script>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>D!KKAT D!KKAT | Hakkımızda</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.light {
+      background-color: #ffffff;
+      color: #121212;
+    }
+    header {
+      background-color: #1f1f1f;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #333;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: 600;
+      color: #d62828;
+      text-decoration: none;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+    }
+    nav a {
+      margin-left: 20px;
+      color: #ccc;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    nav a:hover {
+      color: white;
+    }
+    .theme-toggle {
+      background: none;
+      border: 1px solid #ccc;
+      color: inherit;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 20px;
+    }
+    .hero {
+      background-color: #1e1e1e;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 24px;
+      color: #eeeeee;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+      line-height: 1.7;
+    }
+    footer {
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid #333;
+      font-size: 14px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="logo" href="index.html">D!KKAT D!KKAT</a>
+    <nav>
+      <a href="index.html">Ana Sayfa</a>
+      <a href="iletisim.html">İletişim</a>
+      <a href="auto.html">Giriş / Üye Ol</a>
+      <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h1>Hakkımızda</h1>
+  </div>
+
+  <div class="container">
+    <p>Güncel olayların analizinden kişisel gelişime, kültürel üretimden görünmeyen meselelere kadar geniş bir yelpazede düşünce üretmeyi amaçlayan, kar amacı gütmeyen bir sivil girişimdir.</p>
+    <br />
+    <p>Amacımız; gündemde olan konuların arka planına inmekle kalmayıp, gündem dışında kalan, konuşulmayan ya da ötelenen meselelere de ışık tutmaktır. Toplumsal olaylar kadar bireysel farkındalığın da önemine inanıyor; kişisel gelişim, düşünsel derinlik ve eleştirel bakış açısını teşvik eden içerikler üretiyoruz.</p>
+    <br />
+    <p>Kitap ve film eleştirileri, çağdaş kültür analizleri, söyleşiler ve çeşitli medya içerikleriyle hem bireyin hem de toplumun düşünsel zenginliğini artırmayı hedefliyoruz. Farklı alanlardan gelen bakış açılarına alan açarak, eleştirel diyaloğun güçlenmesini önemsiyoruz.</p>
+    <br />
+    <p>Biz, sadece gündemi takip etmeyeceğiz; gündemin ötesine geçerek, insanı ve toplumu çok yönlü bir bakışla anlamaya çalışacağız. Çünkü inanıyoruz ki gelişim, yalnızca değişen dünyayı anlamakla değil, kendimizi de daha derinlemesine tanımakla mümkündür.</p>
+  </div>
+
+
+<script>
+  // Sayfa yüklendiğinde, localStorage'dan tema bilgisi al
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light") {
+      document.body.classList.add("light");
+    }
+  });
+
+  function toggleTheme() {
+    const isLight = document.body.classList.toggle("light");
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+  }
+<script type="module">
+  // Firebase modüllerini içe aktar
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+  // Firebase yapılandırman
+  const firebaseConfig = {
+    apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
+    authDomain: "dikkatdikkatblogu.firebaseapp.com",
+    projectId: "dikkatdikkatblogu",
+    storageBucket: "dikkatdikkatblogu.firebasestorage.app",
+    messagingSenderId: "699804017421",
+    appId: "1:699804017421:web:1b55f39f875389134fc644"
+  };
+
+  // Firebase başlat
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Oturum kontrolü
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("Giriş yapılmış:", user.email);
+      // Örneğin, kullanıcı adını veya çıkış butonunu burada gösterebilirsin
+    } else {
+      console.log("Giriş yapılmamış.");
+      // Gerekirse yönlendirme veya uyarı da ekleyebilirsin
+    }
+  });
+</script>
+<script type="module">
+  // Firebase modüllerini içe aktar
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+  // Firebase yapılandırman
+  const firebaseConfig = {
+    apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
+    authDomain: "dikkatdikkatblogu.firebaseapp.com",
+    projectId: "dikkatdikkatblogu",
+    storageBucket: "dikkatdikkatblogu.firebasestorage.app",
+    messagingSenderId: "699804017421",
+    appId: "1:699804017421:web:1b55f39f875389134fc644"
+  };
+
+  // Firebase başlat
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Oturum kontrolü
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("Giriş yapılmış:", user.email);
+      // Örneğin, kullanıcı adını veya çıkış butonunu burada gösterebilirsin
+    } else {
+      console.log("Giriş yapılmamış.");
+      // Gerekirse yönlendirme veya uyarı da ekleyebilirsin
+    }
+  });
+</script>
+
+</body>
+</html>
+
+</body>
+</html>
 </body>
 </html>
