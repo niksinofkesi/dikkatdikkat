@@ -45,10 +45,18 @@
       display: flex;
       gap: 10px;
     }
+
+    a {
+      color: #fff;
+      display: inline-block;
+      margin-top: 20px;
+      text-align: center;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
-  <h2>Makale Duzenle</h2>
+  <h2>Makale Düzenle</h2>
 
   <select id="makaleListesi" onchange="makaleSec()">
     <option value="">Bir makale seçin...</option>
@@ -62,6 +70,8 @@
     <button onclick="makaleyiGuncelle()">Güncelle</button>
     <button onclick="makaleyiSil()">Sil</button>
   </div>
+
+  <a href="admin.html">← Admin Paneline Geri Dön</a>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -165,4 +175,5 @@
   </script>
 </body>
 </html>
+
 
