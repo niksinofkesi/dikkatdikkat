@@ -42,13 +42,17 @@
 
   <input type="text" id="baslik" placeholder="Makale Başlığı" />
   <textarea id="icerik" rows="6" placeholder="Makale İçeriği"></textarea>
+  
+  <input type="file" id="dosya" accept="image/*" />
   <input type="text" id="gorsel" placeholder="Görsel URL (zorunlu değil)" />
+
   <button onclick="makaleEkle()">Kaydet</button>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 
   <script>
     const firebaseConfig = {
@@ -65,7 +69,9 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
+    const storage = firebase.storage();
 
+    // Admin değilse yönlendir
     auth.onAuthStateChanged((user) => {
       if (!user || user.email !== ADMIN_EMAIL) {
         alert("Bu sayfaya sadece yönetici erişebilir.");
@@ -76,17 +82,34 @@
     function makaleEkle() {
       const baslik = document.getElementById("baslik").value.trim();
       const icerik = document.getElementById("icerik").value.trim();
-      const gorsel = document.getElementById("gorsel").value.trim();
+      const gorselURLInput = document.getElementById("gorsel").value.trim();
+      const dosya = document.getElementById("dosya").files[0];
 
       if (!baslik || !icerik) {
         alert("Başlık ve içerik zorunludur.");
         return;
       }
 
+      if (dosya) {
+        const storageRef = storage.ref("makaleGorseller/" + Date.now() + "_" + dosya.name);
+        storageRef.put(dosya)
+          .then(snapshot => snapshot.ref.getDownloadURL())
+          .then(downloadURL => {
+            kaydetMakale(baslik, icerik, downloadURL);
+          })
+          .catch(error => {
+            alert("Görsel yükleme hatası: " + error.message);
+          });
+      } else {
+        kaydetMakale(baslik, icerik, gorselURLInput || "");
+      }
+    }
+
+    function kaydetMakale(baslik, icerik, gorsel) {
       db.collection("makaleler").add({
         baslik,
         icerik,
-        gorsel: gorsel || "",
+        gorsel,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       })
       .then(() => {
@@ -94,6 +117,7 @@
         document.getElementById("baslik").value = "";
         document.getElementById("icerik").value = "";
         document.getElementById("gorsel").value = "";
+        document.getElementById("dosya").value = "";
       })
       .catch((error) => {
         alert("Hata: " + error.message);
