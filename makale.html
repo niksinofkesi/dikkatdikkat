@@ -255,5 +255,37 @@
   }
 
   </script>
+<script type="module">
+  // Firebase modüllerini içe aktar
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+  // Firebase yapılandırman
+  const firebaseConfig = {
+    apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
+    authDomain: "dikkatdikkatblogu.firebaseapp.com",
+    projectId: "dikkatdikkatblogu",
+    storageBucket: "dikkatdikkatblogu.firebasestorage.app",
+    messagingSenderId: "699804017421",
+    appId: "1:699804017421:web:1b55f39f875389134fc644"
+  };
+
+  // Firebase başlat
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Oturum kontrolü
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("Giriş yapılmış:", user.email);
+      // Örneğin, kullanıcı adını veya çıkış butonunu burada gösterebilirsin
+    } else {
+      console.log("Giriş yapılmamış.");
+      // Gerekirse yönlendirme veya uyarı da ekleyebilirsin
+    }
+  });
+</script>
+
+
 </body>
 </html>
