@@ -3,59 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Makale Ekle | D!KKAT D!KKAT</title>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-
+  <title>Admin Paneli | D!KKAT D!KKAT</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <style>
     body {
       background-color: #121212;
       color: #e0e0e0;
       font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 50px auto;
-      padding: 0 20px;
+      text-align: center;
+      padding: 50px 20px;
     }
 
-    input, textarea, button {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
+    h1 {
+      margin-bottom: 30px;
+    }
+
+    .admin-links a {
+      display: block;
       background-color: #1e1e1e;
-      border: 1px solid #333;
+      padding: 15px;
+      margin: 10px auto;
+      width: 250px;
       color: #fff;
-      border-radius: 4px;
-      box-sizing: border-box;
+      text-decoration: none;
+      border-radius: 8px;
+      border: 1px solid #333;
+      transition: background 0.3s;
     }
 
-    button {
+    .admin-links a:hover {
       background-color: #333;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #444;
     }
   </style>
 </head>
 <body>
-  <h2>Yeni Makale Ekle</h2>
-
-  <input type="text" id="baslik" placeholder="Makale Başlığı" />
-  <textarea id="icerik" rows="6" placeholder="Makale İçeriği"></textarea>
-  <input type="text" id="gorsel" placeholder="Görsel URL (zorunlu değil)" />
-  <button onclick="makaleEkle()">Kaydet</button>
+  <h1>Yönetici Paneli</h1>
+  <div class="admin-links">
+    <a href="makale_ekle.html">➕ Makale Ekle</a>
+    <a href="makale_duzenle.html">✏️ Makale Düzenle</a>
+    <a href="yorumlar.html">💬 Yorumları Görüntüle/Sil</a>
+    <a href="index.html">🏠 Ana Sayfaya Dön</a>
+  </div>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
       authDomain: "dikkatdikkatblogu.firebaseapp.com",
       projectId: "dikkatdikkatblogu",
-      storageBucket: "dikkatdikkatblogu.firebasestorage.app",
+      storageBucket: "dikkatdikkatblogu.appspot.com",
       messagingSenderId: "699804017421",
       appId: "1:699804017421:web:1b55f39f875389134fc644"
     };
@@ -64,7 +63,6 @@
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    const db = firebase.firestore();
 
     auth.onAuthStateChanged((user) => {
       if (!user || user.email !== ADMIN_EMAIL) {
@@ -72,33 +70,7 @@
         window.location.href = "index.html";
       }
     });
-
-    function makaleEkle() {
-      const baslik = document.getElementById("baslik").value.trim();
-      const icerik = document.getElementById("icerik").value.trim();
-      const gorsel = document.getElementById("gorsel").value.trim();
-
-      if (!baslik || !icerik) {
-        alert("Başlık ve içerik zorunludur.");
-        return;
-      }
-
-      db.collection("makaleler").add({
-        baslik: baslik,
-        icerik: icerik,
-        gorsel: gorsel || "",
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .then(() => {
-        alert("Makale başarıyla eklendi!");
-        document.getElementById("baslik").value = "";
-        document.getElementById("icerik").value = "";
-        document.getElementById("gorsel").value = "";
-      })
-      .catch((error) => {
-        alert("Hata: " + error.message);
-      });
-    }
   </script>
 </body>
 </html>
+
