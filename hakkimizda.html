@@ -107,15 +107,22 @@
     <p>Biz, sadece gündemi takip etmeyeceğiz; gündemin ötesine geçerek, insanı ve toplumu çok yönlü bir bakışla anlamaya çalışacağız. Çünkü inanıyoruz ki gelişim, yalnızca değişen dünyayı anlamakla değil, kendimizi de daha derinlemesine tanımakla mümkündür.</p>
   </div>
 
-  <footer>
-    &copy; 2025 D!KKAT D!KKAT. Tüm hakları saklıdır.
-  </footer>
 
-  <script>
-    function toggleTheme() {
-      document.body.classList.toggle("light");
+<script>
+  // Sayfa yüklendiğinde, localStorage'dan tema bilgisi al
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light") {
+      document.body.classList.add("light");
     }
-  </script>
+  });
+
+  function toggleTheme() {
+    const isLight = document.body.classList.toggle("light");
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+  }
+</script>
+
 </body>
 </html>
 
