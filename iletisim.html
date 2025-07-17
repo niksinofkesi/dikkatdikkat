@@ -160,19 +160,20 @@
     </div>
   </div>
 
-  <footer>
-    &copy; 2025 D!KKAT D!KKAT. Tüm hakları saklıdır.
-  </footer>
-
-  <script>
-    function toggleTheme() {
-      document.body.classList.toggle("light");
+<script>
+  // Sayfa yüklendiğinde, localStorage'dan tema bilgisi al
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light") {
+      document.body.classList.add("light");
     }
+  });
 
-    function submitForm(e) {
-      e.preventDefault();
-      alert("Mesajınız gönderildi! (Not: Bu demo formdur, veri gönderilmez.)");
-    }
-  </script>
+  function toggleTheme() {
+    const isLight = document.body.classList.toggle("light");
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+  }
+</script>
+
 </body>
 </html>
