@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Makale Düzenle | D!KKAT D!KKAT</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+
   <style>
     body {
       background-color: #121212;
       color: #e0e0e0;
       font-family: Arial, sans-serif;
-      padding: 20px;
       max-width: 800px;
-      margin: auto;
+      margin: 50px auto;
+      padding: 0 20px;
     }
 
     h2 {
@@ -20,41 +21,47 @@
       margin-bottom: 30px;
     }
 
-    .makale {
-      background-color: #1e1e1e;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-
-    .makale input, .makale textarea {
+    select, input, textarea, button {
       width: 100%;
-      padding: 8px;
-      margin: 8px 0;
-      background-color: #2c2c2c;
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #1e1e1e;
+      border: 1px solid #333;
       color: #fff;
-      border: 1px solid #444;
       border-radius: 4px;
+      box-sizing: border-box;
     }
 
-    .makale button {
-      padding: 10px;
+    button {
       background-color: #333;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
       cursor: pointer;
     }
 
-    .makale button:hover {
-      background-color: #555;
+    button:hover {
+      background-color: #444;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
     }
   </style>
 </head>
 <body>
-
   <h2>Makale Düzenle</h2>
-  <div id="makaleler"></div>
+
+  <select id="makaleListesi" onchange="makaleSec()">
+    <option value="">Bir makale seçin...</option>
+  </select>
+
+  <input type="text" id="baslik" placeholder="Makale Başlığı" />
+  <textarea id="icerik" rows="6" placeholder="Makale İçeriği"></textarea>
+  <input type="text" id="gorsel" placeholder="Görsel URL (zorunlu değil)" />
+
+  <div class="button-group">
+    <button onclick="makaleyiGuncelle()">Güncelle</button>
+    <button onclick="makaleyiSil()">Sil</button>
+  </div>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -62,7 +69,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <script>
-    // Firebase ayarları
     const firebaseConfig = {
       apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
       authDomain: "dikkatdikkatblogu.firebaseapp.com",
@@ -78,53 +84,85 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
+    let secilenMakaleId = "";
+
     auth.onAuthStateChanged((user) => {
       if (!user || user.email !== ADMIN_EMAIL) {
-        alert("Bu sayfaya sadece admin erişebilir.");
+        alert("Bu sayfaya sadece yönetici erişebilir.");
         window.location.href = "index.html";
         return;
       }
-      makaleleriGetir();
+      makaleleriYukle();
     });
 
-    function makaleleriGetir() {
-      db.collection("makaleler").orderBy("createdAt", "desc").get()
-        .then(snapshot => {
-          const container = document.getElementById("makaleler");
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            const makaleDiv = document.createElement("div");
-            makaleDiv.className = "makale";
+    function makaleleriYukle() {
+      const liste = document.getElementById("makaleListesi");
+      liste.innerHTML = '<option value="">Bir makale seçin...</option>';
 
-            makaleDiv.innerHTML = `
-              <input type="text" value="${data.baslik}" id="baslik-${doc.id}" />
-              <textarea rows="4" id="icerik-${doc.id}">${data.icerik}</textarea>
-              <input type="text" value="${data.gorsel || ""}" id="gorsel-${doc.id}" />
-              <button onclick="guncelle('${doc.id}')">Güncelle</button>
-            `;
-            container.appendChild(makaleDiv);
-          });
+      db.collection("makaleler").orderBy("createdAt", "desc").get().then(snapshot => {
+        snapshot.forEach(doc => {
+          const option = document.createElement("option");
+          option.value = doc.id;
+          option.textContent = doc.data().baslik || "Başlıksız Makale";
+          liste.appendChild(option);
         });
+      });
     }
 
-    function guncelle(id) {
-      const baslik = document.getElementById(`baslik-${id}`).value.trim();
-      const icerik = document.getElementById(`icerik-${id}`).value.trim();
-      const gorsel = document.getElementById(`gorsel-${id}`).value.trim();
+    function makaleSec() {
+      const id = document.getElementById("makaleListesi").value;
+      if (!id) return;
 
-      if (!baslik || !icerik) {
-        alert("Başlık ve içerik zorunludur.");
+      secilenMakaleId = id;
+
+      db.collection("makaleler").doc(id).get().then(doc => {
+        if (doc.exists) {
+          const veri = doc.data();
+          document.getElementById("baslik").value = veri.baslik || "";
+          document.getElementById("icerik").value = veri.icerik || "";
+          document.getElementById("gorsel").value = veri.gorsel || "";
+        }
+      });
+    }
+
+    function makaleyiGuncelle() {
+      if (!secilenMakaleId) {
+        alert("Lütfen bir makale seçin.");
         return;
       }
 
-      db.collection("makaleler").doc(id).update({
-        baslik,
-        icerik,
-        gorsel
-      })
-      .then(() => alert("Makale güncellendi."))
-      .catch(err => alert("Hata: " + err.message));
+      const guncelVeri = {
+        baslik: document.getElementById("baslik").value.trim(),
+        icerik: document.getElementById("icerik").value.trim(),
+        gorsel: document.getElementById("gorsel").value.trim()
+      };
+
+      db.collection("makaleler").doc(secilenMakaleId).update(guncelVeri)
+        .then(() => alert("Makale başarıyla güncellendi!"))
+        .catch(err => alert("Hata: " + err.message));
+    }
+
+    function makaleyiSil() {
+      if (!secilenMakaleId) {
+        alert("Lütfen bir makale seçin.");
+        return;
+      }
+
+      if (confirm("Bu makaleyi silmek istediğinize emin misiniz?")) {
+        db.collection("makaleler").doc(secilenMakaleId).delete()
+          .then(() => {
+            alert("Makale silindi.");
+            makaleleriYukle();
+            document.getElementById("baslik").value = "";
+            document.getElementById("icerik").value = "";
+            document.getElementById("gorsel").value = "";
+            document.getElementById("makaleListesi").value = "";
+            secilenMakaleId = "";
+          })
+          .catch(err => alert("Hata: " + err.message));
+      }
     }
   </script>
 </body>
 </html>
+
