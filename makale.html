@@ -167,9 +167,6 @@
     </div>
   </div>
 
-  <footer>
-    &copy; 2025 D!KKAT D!KKAT. Tüm hakları saklıdır.
-  </footer>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -243,6 +240,20 @@
         document.getElementById("makale-icerik").innerText = "";
       }
     });
+    
+  // Sayfa yüklendiğinde, localStorage'dan tema bilgisi al
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light") {
+      document.body.classList.add("light");
+    }
+  });
+
+  function toggleTheme() {
+    const isLight = document.body.classList.toggle("light");
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+  }
+
   </script>
 </body>
 </html>
