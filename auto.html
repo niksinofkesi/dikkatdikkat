@@ -158,10 +158,20 @@
       }
     }
 
-    function toggleTheme() {
-      const body = document.body;
-      const current = body.getAttribute("data-theme");
-      body.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+  // Sayfa yüklendiğinde, localStorage'dan tema bilgisi al
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light") {
+      document.body.classList.add("light");
+    }
+  });
+
+  function toggleTheme() {
+    const isLight = document.body.classList.toggle("light");
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+  }
+
+
     }
   </script>
 </body>
