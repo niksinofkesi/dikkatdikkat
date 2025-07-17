@@ -7,12 +7,151 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    /* ... stil kodları (seninkiler doğru, yeniden yazmıyorum) ... */
-    img {
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.light {
+      background-color: #ffffff;
+      color: #121212;
+    }
+
+    header {
+      background-color: #1f1f1f;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #333;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 600;
+      color: #d62828;
+      text-decoration: none;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .nav-right a {
+      color: #ccc;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-right a:hover {
+      color: white;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid #ccc;
+      color: inherit;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .theme-toggle:hover {
+      border-color: white;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    h1 {
+      color: #ff4d4d;
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+
+    .buttons {
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      margin-right: 10px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #d62828;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .buttons button:hover {
+      background-color: #ff4d4d;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid #333;
+      font-size: 14px;
+      color: #888;
+    }
+
+    body.light header {
+      background-color: #f9f9f9;
+      border-bottom: 1px solid #ccc;
+    }
+
+    body.light footer {
+      border-top: 1px solid #ccc;
+      color: #555;
+    }
+
+    body.light .nav-right a {
+      color: #333;
+    }
+
+    body.light .theme-toggle {
+      border-color: #999;
+    }
+
+    #makale-gorsel {
       max-width: 100%;
-      height: auto;
-      margin: 20px 0;
+      margin-bottom: 20px;
+      display: none;
       border-radius: 10px;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-right {
+        margin-top: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
     }
   </style>
 </head>
@@ -28,8 +167,9 @@
 
   <div class="container">
     <h1 id="makale-baslik">Yükleniyor...</h1>
-    <img id="makale-gorsel" src="" alt="" style="display:none;">
+    <img id="makale-gorsel" src="" alt="Makale Görseli">
     <p id="makale-icerik">...</p>
+
     <div class="buttons" id="user-buttons" style="display:none;">
       <button onclick="kutuphaneyeEkle()">Kütüphaneye Ekle</button>
     </div>
@@ -53,6 +193,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const auth = firebase.auth();
+
     const makaleId = new URLSearchParams(window.location.search).get("id");
 
     function toggleTheme() {
@@ -69,7 +210,6 @@
         db.collection("users").doc(user.uid).collection("kutuphane").doc(makaleId).set({
           baslik: veri.baslik,
           icerik: veri.icerik,
-          gorselUrl: veri.gorselUrl || "",
           tarih: new Date()
         }).then(() => {
           alert("Makale kütüphaneye eklendi.");
@@ -93,11 +233,11 @@
         document.getElementById("makale-baslik").innerText = veri.baslik;
         document.getElementById("makale-icerik").innerText = veri.icerik;
 
+        // Görsel gösterimi
         if (veri.gorselUrl) {
-          const imgEl = document.getElementById("makale-gorsel");
-          imgEl.src = veri.gorselUrl;
-          imgEl.style.display = "block";
-          imgEl.alt = veri.baslik;
+          const img = document.getElementById("makale-gorsel");
+          img.src = veri.gorselUrl;
+          img.style.display = "block";
         }
 
         auth.onAuthStateChanged(user => {
@@ -116,7 +256,6 @@
       }
     });
 
-    // Tema ayarını yükle
     window.addEventListener("DOMContentLoaded", () => {
       const savedTheme = localStorage.getItem("theme");
       if (savedTheme === "light") {
@@ -126,4 +265,5 @@
   </script>
 </body>
 </html>
+
 
