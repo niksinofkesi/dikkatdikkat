@@ -228,18 +228,21 @@
       }
     });
 
-    // Tema geçişi ve kaydetme
-    function toggleTheme() {
-      const body = document.body;
-      body.classList.toggle("light");
-      localStorage.setItem("tema", body.classList.contains("light") ? "light" : "dark");
+ 
+  // Sayfa yüklendiğinde, localStorage'dan tema bilgisi al
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light") {
+      document.body.classList.add("light");
     }
+  });
 
-    // Sayfa yüklenince tema uygula
-    window.addEventListener("DOMContentLoaded", () => {
-      const tema = localStorage.getItem("tema");
-      if (tema === "light") document.body.classList.add("light");
-    });
+  function toggleTheme() {
+    const isLight = document.body.classList.toggle("light");
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+  }
+
+
   </script>
 </body>
 </html>
