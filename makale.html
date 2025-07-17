@@ -233,11 +233,13 @@
         document.getElementById("makale-baslik").innerText = veri.baslik;
         document.getElementById("makale-icerik").innerText = veri.icerik;
 
-        // Görsel gösterimi
-        if (veri.gorselUrl) {
-          const img = document.getElementById("makale-gorsel");
+        // Görsel gösterimi (düzenlenmiş kısım)
+        const img = document.getElementById("makale-gorsel");
+        if (veri.gorselUrl && typeof veri.gorselUrl === "string" && veri.gorselUrl.trim() !== "") {
           img.src = veri.gorselUrl;
           img.style.display = "block";
+        } else {
+          img.style.display = "none";
         }
 
         auth.onAuthStateChanged(user => {
