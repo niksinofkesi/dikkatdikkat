@@ -3,186 +3,135 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>D!KKAT D!KKAT | Ana Sayfa</title>
-
-  <!-- Favicon -->
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <title>D!KKAT D!KKAT | Anasayfa</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* Aynı stiller, sadece profil kısmı eklendi */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #121212;
-      color: #f0f0f0;
-      transition: background 0.3s, color 0.3s;
+      font-family: 'Rubik', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fdfdfd;
+      color: #111;
+      transition: background-color 0.3s, color 0.3s;
     }
 
-    body.light {
-      background-color: #ffffff;
-      color: #121212;
+    body.dark {
+      background-color: #111;
+      color: #fdfdfd;
     }
 
     header {
-      background-color: #1f1f1f;
-      padding: 20px;
+      background-color: #333;
+      color: white;
+      padding: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      border-bottom: 1px solid #333;
     }
 
-    .logo {
-      font-size: 24px;
-      font-weight: 600;
-      color: #d62828;
-      text-decoration: none;
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
     }
 
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .nav-right a, .nav-right span {
-      color: #ccc;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .nav-right a:hover {
+    nav a {
       color: white;
+      margin-left: 1rem;
+      text-decoration: none;
     }
 
-    .theme-toggle {
-      background: none;
-      border: 1px solid #ccc;
-      color: inherit;
-      padding: 6px 10px;
-      border-radius: 5px;
+    .toggle-theme {
       cursor: pointer;
-      font-size: 14px;
+      background: none;
+      border: 1px solid white;
+      color: white;
+      padding: 0.4rem 0.8rem;
+      border-radius: 5px;
+      margin-left: 1rem;
     }
 
-    .theme-toggle:hover {
-      border-color: white;
-    }
-
-    .hero {
-      background-color: #1e1e1e;
-      padding: 40px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .hero h1 {
-      font-size: 20px;
-      color: #eeeeee;
-      max-width: 700px;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 20px;
+    main {
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
     }
 
     .makale-card {
-      background-color: #1e1e1e;
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 30px;
-      border-left: 5px solid #d62828;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      transition: 0.3s;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      background-color: #fff;
+      transition: background-color 0.3s;
     }
 
-    .makale-card:hover {
-      transform: scale(1.01);
+    body.dark .makale-card {
+      background-color: #222;
+      border-color: #444;
+    }
+
+    .makale-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      object-fit: cover;
+      max-height: 300px;
     }
 
     .makale-card h2 {
-      color: #ff4d4d;
-      margin-bottom: 10px;
-    }
-
-    .makale-card p {
-      color: #ddd;
+      margin-top: 0;
     }
 
     .makale-card a {
       display: inline-block;
-      margin-top: 10px;
-      color: #d62828;
+      margin-top: 1rem;
+      text-decoration: none;
+      color: #007BFF;
+    }
+
+    .makale-card a:hover {
       text-decoration: underline;
-    }
-
-    footer {
-      text-align: center;
-      padding: 30px;
-      border-top: 1px solid #333;
-      font-size: 14px;
-      color: #888;
-    }
-
-    body.light header { background-color: #f9f9f9; border-bottom: 1px solid #ccc; }
-    body.light .makale-card { background-color: #f3f3f3; color: #121212; }
-    body.light .makale-card p { color: #333; }
-    body.light footer { border-top: 1px solid #ccc; color: #555; }
-    body.light .nav-right a { color: #333; }
-    body.light .theme-toggle { border-color: #999; }
-
-    @media (max-width: 600px) {
-      header { flex-direction: column; align-items: flex-start; }
-      .nav-right { margin-top: 10px; flex-direction: column; align-items: flex-start; gap: 10px; }
     }
   </style>
 </head>
 <body>
   <header>
-    <a class="logo" href="index.html">D!KKAT D!KKAT</a>
-    <div class="nav-right" id="nav-links">
-      <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+    <h1>D!KKAT D!KKAT</h1>
+    <nav>
+      <a href="index.html">Anasayfa</a>
+      <a href="profil.html">Profil</a>
       <a href="hakkimizda.html">Hakkımızda</a>
       <a href="iletisim.html">İletişim</a>
-      <!-- Giriş / Profil bilgisi buraya dinamik eklenecek -->
-    </div>
+      <button class="toggle-theme">🌙 Tema</button>
+    </nav>
   </header>
 
-  <div class="hero">
-    <h1>“İnanıyoruz ki gelişim, yalnızca değişen dünyayı anlamakla değil, kendimizi de daha derinlemesine tanımakla mümkündür.”</h1>
-  </div>
+  <main>
+    <div id="makale-liste"></div>
+  </main>
 
-  <div class="container" id="makale-liste">
-    <!-- Firebase'den makaleler gelecek -->
-  </div>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
-
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <script>
+    // Firebase yapılandırması (senin projenle uyumlu olanı buraya koy)
     const firebaseConfig = {
-      apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
-      authDomain: "dikkatdikkatblogu.firebaseapp.com",
-      projectId: "dikkatdikkatblogu",
-      storageBucket: "dikkatdikkatblogu.appspot.com",
-      messagingSenderId: "699804017421",
-      appId: "1:699804017421:web:1b55f39f875389134fc644"
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MSG_ID",
+      appId: "YOUR_APP_ID"
     };
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    const auth = firebase.auth();
 
-    // Makaleleri getir
+    // Makaleleri getir ve listele
     db.collection("makaleler").orderBy("createdAt", "desc").get().then(snapshot => {
       const container = document.getElementById("makale-liste");
       snapshot.forEach(doc => {
@@ -190,12 +139,14 @@
         const id = doc.id;
         const div = document.createElement("div");
         div.className = "makale-card";
-      let gorselHTML = "";
-          if (m.gorselUrl) {
-            gorselHTML = `<img src="${m.gorselUrl}" alt="${m.baslik}">`;
-          }
-        div.innerHTML =
-          ${gorselHTML}`
+
+        let gorselHTML = "";
+        if (m.gorselUrl) {
+          gorselHTML = `<img src="${m.gorselUrl}" alt="${m.baslik}">`;
+        }
+
+        div.innerHTML = `
+          ${gorselHTML}
           <h2>${m.baslik}</h2>
           <p>${m.icerik.slice(0, 200)}...</p>
           <a href="makale.html?id=${id}">Devamını oku</a>
@@ -203,54 +154,28 @@
         container.appendChild(div);
       });
     });
+  </script>
 
-    // Oturum kontrolü
-    auth.onAuthStateChanged((user) => {
-      const nav = document.getElementById("nav-links");
-      const girişLinki = document.querySelector('a[href="auto.html"]');
-      if (user) {
-        db.collection("users").doc(user.uid).get().then((doc) => {
-          const username = doc.exists ? doc.data().kullaniciAdi : "Kullanıcı";
-          if (girişLinki) girişLinki.remove();
-          const span = document.createElement("span");
-          span.innerHTML = `👤 ${username}`;
-          const profil = document.createElement("a");
-          profil.href = "profil.html";
-          profil.textContent = "Profil";
-
-          const cikis = document.createElement("a");
-          cikis.href = "#";
-          cikis.onclick = (e) => {
-            e.preventDefault();
-            auth.signOut().then(() => location.reload());
-          };
-          cikis.textContent = "Çıkış";
-
-          nav.appendChild(span);
-          nav.appendChild(profil);
-          nav.appendChild(cikis);
-        });
-      }
+  <!-- Tema Değiştirici -->
+  <script>
+    const themeBtn = document.querySelector(".toggle-theme");
+    themeBtn.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      const yeniTema = document.body.classList.contains("dark") ? "dark" : "light";
+      localStorage.setItem("tema", yeniTema);
     });
 
- 
-  // Sayfa yüklendiğinde, localStorage'dan tema bilgisi al
-  window.addEventListener("DOMContentLoaded", () => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "light") {
-      document.body.classList.add("light");
-    }
-  });
-
-  function toggleTheme() {
-    const isLight = document.body.classList.toggle("light");
-    localStorage.setItem("theme", isLight ? "light" : "dark");
-  }
-
-
+    // Sayfa yüklenince mevcut temayı uygula
+    window.addEventListener("DOMContentLoaded", () => {
+      const kayitliTema = localStorage.getItem("tema");
+      if (kayitliTema === "dark") {
+        document.body.classList.add("dark");
+      }
+    });
   </script>
 </body>
 </html>
+
 
 
 
