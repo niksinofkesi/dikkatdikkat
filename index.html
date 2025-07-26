@@ -10,7 +10,6 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    /* Aynı stiller, sadece profil kısmı eklendi */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
@@ -101,6 +100,7 @@
       border-left: 5px solid #d62828;
       box-shadow: 0 4px 8px rgba(0,0,0,0.3);
       transition: 0.3s;
+      overflow: hidden;
     }
 
     .makale-card:hover {
@@ -123,6 +123,16 @@
       text-decoration: underline;
     }
 
+    .makale-gorsel {
+      width: 120px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      float: left;
+      margin-right: 15px;
+    }
+
     footer {
       text-align: center;
       padding: 30px;
@@ -141,6 +151,13 @@
     @media (max-width: 600px) {
       header { flex-direction: column; align-items: flex-start; }
       .nav-right { margin-top: 10px; flex-direction: column; align-items: flex-start; gap: 10px; }
+      .makale-gorsel {
+        width: 100%;
+        height: auto;
+        float: none;
+        margin-right: 0;
+        margin-bottom: 15px;
+      }
     }
   </style>
 </head>
@@ -189,7 +206,7 @@
         const div = document.createElement("div");
         div.className = "makale-card";
         div.innerHTML = `
-          ${m.gorselUrl ? `<img src="${m.gorselUrl}" alt="${m.baslik}" style="max-width:100%; border-radius:8px; margin-bottom:10px;">` : ''}
+          ${m.gorselUrl ? `<img class="makale-gorsel" src="${m.gorselUrl}" alt="${m.baslik}">` : ''}
           <h2>${m.baslik}</h2>
           <p>${m.icerik.slice(0, 200)}...</p>
           <a href="makale.html?id=${id}">Devamını oku</a>
@@ -201,11 +218,11 @@
     // Oturum kontrolü
     auth.onAuthStateChanged((user) => {
       const nav = document.getElementById("nav-links");
-      const girişLinki = document.querySelector('a[href="auto.html"]');
+      const girisLinki = document.querySelector('a[href="auto.html"]');
       if (user) {
         db.collection("users").doc(user.uid).get().then((doc) => {
           const username = doc.exists ? doc.data().kullaniciAdi : "Kullanıcı";
-          if (girişLinki) girişLinki.remove();
+          if (girisLinki) girisLinki.remove();
           const span = document.createElement("span");
           span.innerHTML = `👤 ${username}`;
           const profil = document.createElement("a");
@@ -242,3 +259,4 @@
   </script>
 </body>
 </html>
+
