@@ -190,11 +190,12 @@
         const id = doc.id;
         const div = document.createElement("div");
         div.className = "makale-card";
-            let resimHtml = "";
-    if (m.resimURL) {
-      resimHtml = `<img src="${m.resimURL}" alt="${m.baslik}" style="max-width:100%; border-radius: 10px; margin-bottom: 15px;">`;
-    }
-        div.innerHTML = `
+      let gorselHTML = "";
+          if (m.gorselUrl) {
+            gorselHTML = `<img src="${m.gorselUrl}" alt="${m.baslik}">`;
+          }
+        div.innerHTML =
+          ${gorselHTML}`
           <h2>${m.baslik}</h2>
           <p>${m.icerik.slice(0, 200)}...</p>
           <a href="makale.html?id=${id}">Devamını oku</a>
