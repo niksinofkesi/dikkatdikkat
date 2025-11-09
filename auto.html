@@ -1,179 +1,194 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Giriş & Kayıt</title>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giriş & Kayıt</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
 
-  <style>
-    :root {
-      --bg-color: #ffffff;
-      --text-color: #000000;
-      --input-bg: #f0f0f0;
-      --button-bg: #333;
-      --button-hover: #444;
-    }
-    [data-theme="dark"] {
-      --bg-color: #121212;
-      --text-color: #e0e0e0;
-      --input-bg: #1e1e1e;
-      --button-bg: #444;
-      --button-hover: #666;
-    }
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #000000;
+      --input-bg: #f0f0f0;
+      --button-bg: #333;
+      --button-hover: #444;
+    }
+    /* Tema CSS'i doğru, buna dokunmaya gerek yok */
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --text-color: #e0e0e0;
+      --input-bg: #1e1e1e;
+      --button-bg: #444;
+      --button-hover: #666;
+    }
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      font-family: Arial, sans-serif;
-      max-width: 400px;
-      margin: 50px auto;
-    }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 50px auto;
+    }
 
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      background-color: var(--input-bg);
-      border: 1px solid #ccc;
-      color: var(--text-color);
-      border-radius: 4px;
-    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background-color: var(--input-bg);
+      border: 1px solid #ccc;
+      color: var(--text-color);
+      border-radius: 4px;
+    }
 
-    button {
-      background-color: var(--button-bg);
-      cursor: pointer;
-    }
+    button {
+      background-color: var(--button-bg);
+      cursor: pointer;
+    }
 
-    button:hover {
-      background-color: var(--button-hover);
-    }
+    button:hover {
+      background-color: var(--button-hover);
+    }
 
-    .hidden { display: none; }
-    h2 { text-align: center; }
-    a {
-      color: var(--text-color);
-      text-decoration: underline;
-      display: block;
-      text-align: center;
-      margin-top: 10px;
-    }
+    .hidden { display: none; }
+    h2 { text-align: center; }
+    a {
+      color: var(--text-color);
+      text-decoration: underline;
+      display: block;
+      text-align: center;
+      margin-top: 10px;
+    }
 
-    .theme-toggle {
-      margin-top: 20px;
-      text-align: center;
-    }
-  </style>
+    .theme-toggle {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
 </head>
-<body data-theme="light">
+<body>
 
-  <h2>Üye Ol</h2>
-  <input type="text" id="signup-username" placeholder="Kullanıcı Adı">
-  <input type="email" id="signup-email" placeholder="E-posta">
-  <input type="password" id="signup-password" placeholder="Şifre">
-  <button onclick="signUp()">Kayıt Ol</button>
+  <h2>Üye Ol</h2>
+  <input type="text" id="signup-username" placeholder="Kullanıcı Adı">
+  <input type="email" id="signup-email" placeholder="E-posta">
+  <input type="password" id="signup-password" placeholder="Şifre">
+  <button onclick="signUp()">Kayıt Ol</button>
 
-  <h2>Giriş Yap</h2>
-  <input type="email" id="login-email" placeholder="E-posta">
-  <input type="password" id="login-password" placeholder="Şifre">
-  <button onclick="login()">Giriş Yap</button>
-  <a onclick="resetPassword()">Şifremi Unuttum</a>
+  <h2>Giriş Yap</h2>
+  <input type="email" id="login-email" placeholder="E-posta">
+  <input type="password" id="login-password" placeholder="Şifre">
+  <button onclick="login()">Giriş Yap</button>
+  <a onclick="resetPassword()">Şifremi Unuttum</a>
 
-  <div class="theme-toggle">
-    <button onclick="toggleTheme()">🌗 Tema Değiştir</button>
-  </div>
+  <div class="theme-toggle">
+    <button onclick="toggleTheme()">🌗 Tema Değiştir</button>
+  </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
-      authDomain: "dikkatdikkatblogu.firebaseapp.com",
-      projectId: "dikkatdikkatblogu",
-      storageBucket: "dikkatdikkatblogu.appspot.com",
-      messagingSenderId: "699804017421",
-      appId: "1:699804017421:web:1b55f39f875389134fc644"
-    };
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDHQMRcCY4_RmMKz9gwMlW3VMb_IXz_RzY",
+      authDomain: "dikkatdikkatblogu.firebaseapp.com",
+      projectId: "dikkatdikkatblogu",
+      storageBucket: "dikkatdikkatblogu.appspot.com",
+      messagingSenderId: "699804017421",
+      appId: "1:699804017421:web:1b55f39f875389134fc644"
+    };
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-    function signUp() {
-      const username = document.getElementById("signup-username").value.trim();
-      const email = document.getElementById("signup-email").value.trim();
-      const password = document.getElementById("signup-password").value;
+    function signUp() {
+      const username = document.getElementById("signup-username").value.trim();
+      const email = document.getElementById("signup-email").value.trim();
+      const password = document.getElementById("signup-password").value;
 
-      if (!username) {
-        alert("Lütfen kullanıcı adınızı girin.");
-        return;
-      }
+      if (!username) {
+        alert("Lütfen kullanıcı adınızı girin.");
+        return;
+      }
 
-      auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          return db.collection("users").doc(user.uid).set({
-            kullaniciAdi: username,
-            email,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
-        })
-        .then(() => {
-          alert("Kayıt başarılı! Giriş yapabilirsiniz.");
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
-    }
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          return db.collection("users").doc(user.uid).set({
+            kullaniciAdi: username,
+            email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        })
+        .then(() => {
+          alert("Kayıt başarılı! Giriş yapabilirsiniz.");
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    }
 
-    function login() {
-      const email = document.getElementById("login-email").value.trim();
-      const password = document.getElementById("login-password").value;
+    function login() {
+      const email = document.getElementById("login-email").value.trim();
+      const password = document.getElementById("login-password").value;
 
-      auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          return db.collection("users").doc(userCredential.user.uid).get();
-        })
-        .then((doc) => {
-          if (doc.exists) {
-            window.location.href = "profil.html";
-          } else {
-            alert("Kullanıcı adı verisi bulunamadı.");
-          }
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
-    }
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          return db.collection("users").doc(userCredential.user.uid).get();
+        })
+        .then((doc) => {
+          if (doc.exists) {
+            // Başarılı girişte profil.html'e yönlendir
+            window.location.href = "profil.html";
+          } else {
+            alert("Kullanıcı adı verisi bulunamadı.");
+          }
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    }
 
-    function resetPassword() {
-      const email = prompt("Lütfen şifre sıfırlama için e-posta adresinizi girin:");
-      if (email) {
-        auth.sendPasswordResetEmail(email)
-          .then(() => alert("Şifre sıfırlama bağlantısı gönderildi."))
-          .catch((error) => alert("Hata: " + error.message));
-      }
-    }
+    function resetPassword() {
+      const email = prompt("Lütfen şifre sıfırlama için e-posta adresinizi girin:");
+      if (email) {
+        auth.sendPasswordResetEmail(email)
+          .then(() => alert("Şifre sıfırlama bağlantısı gönderildi."))
+          .catch((error) => alert("Hata: " + error.message));
+      }
+    }
 
-  // Sayfa yüklendiğinde, localStorage'dan tema bilgisi al
-  window.addEventListener("DOMContentLoaded", () => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "light") {
-      document.body.classList.add("light");
-    }
-  });
+  // --- TEMA DÜZELTMESİ (BAŞLANGIÇ) ---
+  // Sayfa yüklendiğinde, localStorage'dan tema bilgisi al
+  window.addEventListener("DOMContentLoaded", () => {
+    // Kayıtlı tema varsa onu kullan, yoksa "light" varsay
+    const savedTheme = localStorage.getItem("theme") || "light"; 
+    document.body.setAttribute("data-theme", savedTheme);
+  });
 
-  function toggleTheme() {
-    const isLight = document.body.classList.toggle("light");
-    localStorage.setItem("theme", isLight ? "light" : "dark");
-  }
+  function toggleTheme() {
+    // Mevcut temayı "data-theme" özelliğinden oku
+    let currentTheme = document.body.getAttribute("data-theme");
+    
+    // Temayı tersine çevir
+    let newTheme = currentTheme === "light" ? "dark" : "light";
+    
+    // Yeni temayı "data-theme" özelliğine ata
+    document.body.setAttribute("data-theme", newTheme);
+    
+    // Yeni temayı hafızaya kaydet
+    localStorage.setItem("theme", newTheme);
+  }
+  // --- TEMA DÜZELTMESİ (BİTİŞ) ---
 
 
-    }
-  </script>
+   // -----------------------------------------------------
+Click to copy
+//  BURADA FAZLADAN BİR "}" PARANTEZİ VARDI, SİLİNDİ.
+   // -----------------------------------------------------
+
+  </script>
 </body>
 </html>
 
