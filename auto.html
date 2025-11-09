@@ -14,7 +14,6 @@
       --button-bg: #333;
       --button-hover: #444;
     }
-    /* Tema CSS'i doğru, buna dokunmaya gerek yok */
     [data-theme="dark"] {
       --bg-color: #121212;
       --text-color: #e0e0e0;
@@ -22,7 +21,6 @@
       --button-bg: #444;
       --button-hover: #666;
     }
-
     body {
       background-color: var(--bg-color);
       color: var(--text-color);
@@ -30,7 +28,6 @@
       max-width: 400px;
       margin: 50px auto;
     }
-
     input, button {
       width: 100%;
       padding: 10px;
@@ -40,16 +37,13 @@
       color: var(--text-color);
       border-radius: 4px;
     }
-
     button {
       background-color: var(--button-bg);
       cursor: pointer;
     }
-
     button:hover {
       background-color: var(--button-hover);
     }
-
     .hidden { display: none; }
     h2 { text-align: center; }
     a {
@@ -59,7 +53,6 @@
       text-align: center;
       margin-top: 10px;
     }
-
     .theme-toggle {
       margin-top: 20px;
       text-align: center;
@@ -84,7 +77,7 @@
     <button onclick="toggleTheme()">🌗 Tema Değiştir</button>
   </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
@@ -139,7 +132,6 @@
         })
         .then((doc) => {
           if (doc.exists) {
-            // Başarılı girişte profil.html'e yönlendir
             window.location.href = "profil.html";
           } else {
             alert("Kullanıcı adı verisi bulunamadı.");
@@ -159,35 +151,17 @@
       }
     }
 
-  // --- TEMA DÜZELTMESİ (BAŞLANGIÇ) ---
-  // Sayfa yüklendiğinde, localStorage'dan tema bilgisi al
-  window.addEventListener("DOMContentLoaded", () => {
-    // Kayıtlı tema varsa onu kullan, yoksa "light" varsay
-    const savedTheme = localStorage.getItem("theme") || "light"; 
-    document.body.setAttribute("data-theme", savedTheme);
+    window.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme") || "light"; 
+    document.body.setAttribute("data-theme", savedTheme);
   });
 
   function toggleTheme() {
-    // Mevcut temayı "data-theme" özelliğinden oku
-    let currentTheme = document.body.getAttribute("data-theme");
-    
-    // Temayı tersine çevir
-    let newTheme = currentTheme === "light" ? "dark" : "light";
-    
-    // Yeni temayı "data-theme" özelliğine ata
-    document.body.setAttribute("data-theme", newTheme);
-    
-    // Yeni temayı hafızaya kaydet
-    localStorage.setItem("theme", newTheme);
+    let currentTheme = document.body.getAttribute("data-theme");
+    let newTheme = currentTheme === "light" ? "dark" : "light";
+    document.body.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
   }
-  // --- TEMA DÜZELTMESİ (BİTİŞ) ---
-
-
-   // -----------------------------------------------------
-Click to copy
-//  BURADA FAZLADAN BİR "}" PARANTEZİ VARDI, SİLİNDİ.
-   // -----------------------------------------------------
-
   </script>
 </body>
 </html>
